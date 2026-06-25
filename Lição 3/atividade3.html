@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Aviso</title>
+</head>
+<body>
+  <h1>Cadastro de Aviso</h1>
+
+  <form>
+    <label for="titulo">Título</label><br>
+    <input type="text" id="titulo" name="titulo" placeholder="Digite o título do aviso"><br><br>
+
+    <label for="descricao">Descrição</label><br>
+    <textarea id="descricao" name="descricao" rows="5" placeholder="Digite o conteúdo do aviso"></textarea><br><br>
+
+    <label for="categoria">Categoria</label><br>
+    <select id="categoria" name="categoria">
+      <option value="geral">Geral</option>
+      <option value="prova">Prova</option>
+      <option value="evento">Evento</option>
+    </select><br><br>
+
+    <button type="submit">Salvar aviso</button>
+  </form>
+</body>
+</html>
