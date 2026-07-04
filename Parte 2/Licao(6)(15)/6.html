@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Escolar</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f8f8f8;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .cards {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
+      flex: 1;
+      min-width: 220px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2b6cb0;
+      color: white;
+    }
+
+    .botao {
+      display: inline-block;
+      padding: 10px 16px;
+      background-color: #2b6cb0;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+
+    .botao:hover {
+      background-color: #1f4f85;
+    }
+
+    .tarefas {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tarefa {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.08);
+      width: 220px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Painel Escolar</h1>
+
+
+  <h2>Avisos</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Reunião de Responsáveis</h3>
+      <p>Dia 20 às 19h na sala multiuso.</p>
+    </div>
+
+    <div class="card">
+      <h3>Prova de Matemática</h3>
+      <p>Conteúdo: equações e funções.</p>
+    </div>
+
+    <div class="card">
+      <h3>Feira de Ciências</h3>
+      <p>Inscrições abertas até sexta-feira.</p>
+    </div>
+  </div>
+
+
+  <a href="#" class="botao">Abrir Formulário</a>
+
+
+  <h2>Lista de Tarefas</h2>
+
+  <div class="tarefas">
+    <div class="tarefa">
+      <h3>Português</h3>
+      <p>Fazer redação.</p>
+    </div>
+
+    <div class="tarefa">
+      <h3>Matemática</h3>
+      <p>Resolver exercícios da página 42.</p>
+    </div>
+
+    <div class="tarefa">
+      <h3>História</h3>
+      <p>Estudar Revolução Francesa.</p>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <h2>Presença dos Alunos</h2>
+
+  <table>
+    <tr>
+      <th>Nome</th>
+      <th>Turma</th>
+      <th>Status de Presença</th>
+    </tr>
+
+    <tr>
+      <td>João Silva</td>
+      <td>3º A</td>
+      <td>Presente</td>
+    </tr>
+
+    <tr>
+      <td>Maria Oliveira</td>
+      <td>3º B</td>
+      <td>Ausente</td>
+    </tr>
+
+    <tr>
+      <td>Carlos Souza</td>
+      <td>2º A</td>
+      <td>Presente</td>
+    </tr>
+  </table>
+
+</body>
+</html>
