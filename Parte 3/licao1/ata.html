@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercícios Resolvidos</title>
+  <style>
+   body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+   }
+   section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+   }
+   button {
+      background-color: #76d234e0;
+      color: rgb(255, 255, 255);
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+   }
+   button:hover {
+      background-color: #5fa82a; 
+   }
+   .erro {
+      color: red;
+      font-weight: bold;
+   }
+  </style>
+</head>
+<body>
+
+  <section>
+    <h2>1. Botão com Mensagem</h2>
+    <button id="btnMensagem">Clique para ver a mensagem</button>
+  </section>
+
+  <section>
+    <h2>2. Lista de Tarefas</h2>
+    <input type="text" id="inputTarefa" placeholder="Nova tarefa...">
+    <button id="btnTarefa">Adicionar Tarefa</button>
+    <ul id="listaTarefas"></ul>
+  </section>
+
+  <section>
+    <h2>3. Nome do Aluno</h2>
+    <input type="text" id="inputAluno" placeholder="Nome do aluno...">
+    <button id="btnAluno">Mostrar Nome</button>
+    <p id="paragrafoAluno">O nome aparecerá aqui.</p>
+  </section>
+
+  <section>
+    <h2>4. Bloqueio de Campo Vazio</h2>
+    <form id="formularioValidado">
+      <input type="text" id="inputValidar" placeholder="Digite algo obrigatório...">
+      <button type="submit">Enviar Formular disponível</button>
+    </form>
+    <p id="mensagemErro" class="erro"></p>
+  </section>
+
+  <section>
+    <h2>5. Cadastro Rápido de Aviso</h2>
+    <input type="text" id="inputAviso" placeholder="Digite o aviso...">
+    <button id="btnAviso">Adicionar</button>
+    <ul id="listaAvisos"></ul>
+  </section>
+
+  <script>
+    
+    document.querySelector('#btnMensagem').addEventListener('click', () => {
+      alert('Olá! Você clicou no botão.');
+    });
+
+   
+    const inputTarefa = document.querySelector('#inputTarefa');
+    const btnTarefa = document.querySelector('#btnTarefa');
+    const listaTarefas = document.querySelector('#listaTarefas');
+
+    btnTarefa.addEventListener('click', () => {
+      const texto = inputTarefa.value.trim();
+      if (texto !== '') {
+        const item = document.createElement('li');
+        item.textContent = texto;
+        listaTarefas.appendChild(item);
+        inputTarefa.value = '';
+      }
+    });
+
+    const inputAluno = document.querySelector('#inputAluno');
+    const btnAluno = document.querySelector('#btnAluno');
+    const paragrafoAluno = document.querySelector('#paragrafoAluno');
+
+    btnAluno.addEventListener('click', () => {
+      const nome = inputAluno.value.trim();
+      if (nome !== '') {
+        paragrafoAluno.textContent = `Aluno digitado: ${nome}`;
+        inputAluno.value = '';
+      }
+    });
+
+
+    const formulario = document.querySelector('#formularioValidado');
+    const inputValidar = document.querySelector('#inputValidar');
+    const mensagemErro = document.querySelector('#mensagemErro');
+
+    formulario.addEventListener('submit', (evento) => {
+      if (inputValidar.value.trim() === '') {
+        evento.preventDefault(); 
+        mensagemErro.textContent = 'Erro: O campo não pode ficar vazio!';
+      } else {
+        mensagemErro.textContent = ''; 
+        alert('Enviado com sucesso!');
+      }
+    });
+
+
+    const inputAviso = document.querySelector('#inputAviso');
+    const btnAviso = document.querySelector('#btnAviso');
+    const listaAvisos = document.querySelector('#listaAvisos');
+
+    btnAviso.addEventListener('mouseenter', () => {
+      btnAviso.textContent = 'Clique aqui!';
+    });
+
+    btnAviso.addEventListener('mouseleave', () => {
+      btnAviso.textContent = 'Adicionar';
+    });
+
+    btnAviso.addEventListener('click', () => {
+      const texto = inputAviso.value.trim();
+
+      if (texto === '') {
+        alert('Digite um aviso antes de adicionar.');
+        return;
+      }
+
+      const item = document.createElement('li');
+      item.textContent = texto;
+      listaAvisos.appendChild(item);
+
+      inputAviso.value = '';
+      inputAviso.focus();
+    });
+  </script>
+</body>
+</html>
