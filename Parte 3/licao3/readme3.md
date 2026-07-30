@@ -1,7 +1,6 @@
 ssssQuestão 1: Escreva um JSON com os dados de um aviso escolar.
 R:
 
-json
 {
   "id": 1,
   "titulo": "Reunião de responsáveis",
@@ -11,7 +10,7 @@ json
 Questão 2: Escreva um JSON com os dados de uma tarefa.
 R:
 
-json
+
 {
   "id": 12,
   "titulo": "Exercícios de Matemática",

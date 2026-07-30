@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador do Sistema</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; color: #333; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    section { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #eee; }
+    h2 { color: #444; }
+    input { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    button { background-color: #007BFF; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    .btn-atualizar { background-color: #28a745; margin-bottom: 10px; }
+    .btn-atualizar:hover { background-color: #218838; }
+    .mensagem { font-weight: bold; margin-top: 10px; }
+    .erro { color: #dc3545; }
+    .sucesso { color: #28a745; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Painel de Controle</h1>
+
+  <section id="secao-aviso">
+    <h2>Cadastrar Aviso</h2>
+    <input type="text" id="aviso-titulo" placeholder="Título do aviso">
+    <button id="btn-aviso">Enviar Aviso</button>
+    <p id="res-aviso" class="mensagem"></p>
+  </section>
+
+  <section id="secao-usuario">
+    <h2>Cadastrar Usuário</h2>
+    <input type="text" id="usuario-nome" placeholder="Nome do usuário">
+    <input type="email" id="usuario-email" placeholder="E-mail do usuário">
+    <button id="btn-usuario">Enviar Usuário</button>
+    <p id="res-usuario" class="mensagem"></p>
+  </section>
+
+  <section id="secao-tarefa">
+    <h2>Cadastrar Tarefa</h2>
+    <input type="text" id="tarefa-descricao" placeholder="Descrição da tarefa">
+    <button id="btn-tarefa">Enviar Tarefa</button>
+    <p id="res-tarefa" class="mensagem"></p>
+  </section>
+
+  <section id="secao-lista-avisos">
+    <h2>Avisos do Servidor</h2>
+    <button id="btn-atualizar-avisos" class="btn-atualizar">Atualizar Lista</button>
+    <p id="res-lista-erro" class="mensagem erro"></p>
+    <ul id="lista-avisos"></ul>
+  </section>
+</div>
+</body>
+</html>
