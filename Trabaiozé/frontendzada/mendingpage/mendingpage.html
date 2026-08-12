@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quadro de Avisos - Turmas</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Fundo decorativo -->
+    <div class="background">
+        <div class="mountain mountain-1"></div>
+        <div class="mountain mountain-2"></div>
+        <div class="mountain mountain-3"></div>
+        <div class="mountain mountain-4"></div>
+    </div>
+
+
+    <!-- Card principal -->
+    <main class="container">
+
+        <div class="card">
+
+            <h1>Turmas</h1>
+
+            <p class="subtitle">
+                Crie uma nova turma ou ingresse em uma existente.
+            </p>
+
+
+            <!-- Escolha -->
+            <div class="options">
+
+                <button
+                    class="option active"
+                    id="createOption"
+                    onclick="showCreate()"
+                >
+
+                    <div class="option-icon">
+                        +
+                    </div>
+
+                    <div>
+                        <strong>Criar uma turma</strong>
+
+                        <span>
+                            Crie uma turma e compartilhe o código.
+                        </span>
+                    </div>
+
+                </button>
+
+
+                <button
+                    class="option"
+                    id="joinOption"
+                    onclick="showJoin()"
+                >
+
+                    <div class="option-icon join">
+                        →
+                    </div>
+
+                    <div>
+                        <strong>Ingressar em uma turma</strong>
+
+                        <span>
+                            Entre usando o código da turma.
+                        </span>
+                    </div>
+
+                </button>
+
+            </div>
+
+
+            <!-- =========================
+                 CRIAR TURMA
+            ========================== -->
+
+            <section id="createSection">
+
+                <div class="form-group">
+
+                    <label for="className">
+                        Nome da turma
+                    </label>
+
+                    <input
+                        type="text"
+                        id="className"
+                        placeholder="Ex.: Matemática - 3º Ano"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="classDescription">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="classDescription"
+                        placeholder="Ex.: Turma de Matemática do Ensino Médio"
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    class="main-button"
+                    onclick="createClass()"
+                >
+                    Criar turma
+                </button>
+
+            </section>
+
+
+            <!-- =========================
+                 INGRESSAR
+            ========================== -->
+
+            <section
+                id="joinSection"
+                class="hidden"
+            >
+
+                <div class="join-content">
+
+                    <div class="big-icon">
+                        →
+                    </div>
+
+                    <h2>Entre em uma turma</h2>
+
+                    <p>
+                        Digite o código fornecido pelo professor
+                        para acessar a turma.
+                    </p>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="classCode">
+                        Código da turma
+                    </label>
+
+                    <input
+                        type="text"
+                        id="classCode"
+                        class="code-input"
+                        placeholder="Ex.: TUR-7K4P"
+                        maxlength="8"
+                    >
+
+                </div>
+
+
+                <button
+                    class="main-button"
+                    onclick="joinClass()"
+                >
+                    Ingressar na turma
+                </button>
+
+            </section>
+
+
+            <a href="#" class="back">
+                ← Voltar
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- Modal -->
+    <div
+        class="modal-background"
+        id="modal"
+    >
+
+        <div class="modal">
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+
+            <div class="success">
+                ✓
+            </div>
+
+
+            <h2>Turma criada!</h2>
+
+            <p>
+                Compartilhe o código abaixo com os alunos
+                para que eles possam ingressar na turma.
+            </p>
+
+
+            <div class="generated-code">
+
+                <span id="code">
+                    TUR-7K4P
+                </span>
+
+                <button onclick="copyCode()">
+                    Copiar
+                </button>
+
+            </div>
+
+
+            <div class="email-box">
+
+                <div class="email-title">
+                    ✉ &nbsp; Convite para a turma
+                </div>
+
+                <p>
+                    Olá!
+                </p>
+
+                <p>
+                    Você foi convidado para participar da turma
+                    <strong id="emailClass">
+                        Matemática
+                    </strong>
+                    no Quadro de Avisos.
+                </p>
+
+                <p>
+                    Utilize o código abaixo para ingressar:
+                </p>
+
+                <div
+                    class="email-code"
+                    id="emailCode"
+                >
+                    TUR-7K4P
+                </div>
+
+            </div>
+
+
+            <button
+                class="main-button"
+                onclick="closeModal()"
+            >
+                Continuar
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="toast"
+        id="toast"
+    >
+        Código copiado!
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

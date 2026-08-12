@@ -1,0 +1,912 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  color: #090909;
+
+  background:
+      linear-gradient(
+          180deg,
+          #faf8f1 0%,
+          #f5f4eb 50%,
+          #dfe7dc 100%
+      );
+}
+
+
+/* ==========================================
+ FUNDO / PAISAGEM
+========================================== */
+
+.background {
+  position: fixed;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+
+/* camada mais distante */
+
+.mountain {
+  position: absolute;
+
+  left: -10%;
+  width: 120%;
+
+  border-radius: 50% 50% 0 0;
+
+  filter: blur(1px);
+}
+
+
+.mountain-1 {
+  bottom: 47%;
+
+  height: 23%;
+
+  background:
+      linear-gradient(
+          180deg,
+          rgba(229, 231, 218, .45),
+          rgba(220, 226, 213, .65)
+      );
+
+  clip-path: polygon(
+      0 60%,
+      8% 48%,
+      14% 52%,
+      22% 42%,
+      30% 49%,
+      38% 38%,
+      47% 48%,
+      56% 42%,
+      64% 50%,
+      72% 40%,
+      80% 47%,
+      89% 39%,
+      100% 46%,
+      100% 100%,
+      0 100%
+  );
+}
+
+
+/* segunda camada */
+
+.mountain-2 {
+  bottom: 28%;
+
+  height: 30%;
+
+  background:
+      linear-gradient(
+          180deg,
+          rgba(205, 213, 201, .55),
+          rgba(190, 202, 191, .75)
+      );
+
+  clip-path: polygon(
+      0 42%,
+      10% 28%,
+      17% 34%,
+      25% 25%,
+      34% 37%,
+      43% 29%,
+      52% 42%,
+      61% 33%,
+      70% 40%,
+      80% 28%,
+      89% 37%,
+      100% 25%,
+      100% 100%,
+      0 100%
+  );
+}
+
+
+/* terceira camada */
+
+.mountain-3 {
+  bottom: 5%;
+
+  height: 35%;
+
+  background:
+      linear-gradient(
+          180deg,
+          #b9c7bc,
+          #9eafa4
+      );
+
+  opacity: .72;
+
+  clip-path: polygon(
+      0 40%,
+      8% 32%,
+      17% 38%,
+      25% 25%,
+      34% 35%,
+      44% 23%,
+      52% 36%,
+      63% 20%,
+      72% 32%,
+      82% 22%,
+      90% 31%,
+      100% 18%,
+      100% 100%,
+      0 100%
+  );
+}
+
+
+/* camada frontal */
+
+.mountain-4 {
+  bottom: -8%;
+
+  height: 31%;
+
+  background:
+      linear-gradient(
+          180deg,
+          #84998d,
+          #71867b
+      );
+
+  opacity: .65;
+
+  clip-path: polygon(
+      0 30%,
+      10% 42%,
+      19% 34%,
+      28% 46%,
+      37% 38%,
+      47% 50%,
+      56% 40%,
+      66% 48%,
+      75% 37%,
+      85% 45%,
+      94% 35%,
+      100% 41%,
+      100% 100%,
+      0 100%
+  );
+}
+
+
+/* ==========================================
+ CONTAINER
+========================================== */
+
+.container {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 40px 20px;
+}
+
+
+/* ==========================================
+ CARD
+========================================== */
+
+.card {
+  width: 100%;
+
+  max-width: 475px;
+
+  padding: 42px 48px 32px;
+
+  background:
+      rgba(250, 249, 243, .78);
+
+  border: 1px solid
+      rgba(255, 255, 255, .65);
+
+  border-radius: 24px;
+
+  backdrop-filter: blur(15px);
+
+  -webkit-backdrop-filter: blur(15px);
+
+  box-shadow:
+      0 20px 50px
+      rgba(40, 48, 42, .13);
+
+  animation: cardIn .5s ease;
+}
+
+
+@keyframes cardIn {
+
+  from {
+      opacity: 0;
+      transform: translateY(15px);
+  }
+
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+
+}
+
+
+/* ==========================================
+ TÍTULO
+========================================== */
+
+h1 {
+  text-align: center;
+
+  font-size: 37px;
+
+  font-weight: 800;
+
+  letter-spacing: -1.5px;
+
+  margin-bottom: 8px;
+}
+
+
+.subtitle {
+  text-align: center;
+
+  color: #565a56;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  margin-bottom: 28px;
+}
+
+
+/* ==========================================
+ OPÇÕES
+========================================== */
+
+.options {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-bottom: 27px;
+}
+
+
+.option {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 12px;
+
+  text-align: left;
+
+  background:
+      rgba(255, 255, 255, .36);
+
+  border: 1px solid
+      rgba(0, 0, 0, .07);
+
+  border-radius: 13px;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+
+.option:hover {
+  background: rgba(255, 255, 255, .65);
+
+  transform: translateY(-1px);
+}
+
+
+.option.active {
+  background:
+      rgba(238, 237, 255, .82);
+
+  border-color:
+      rgba(79, 70, 229, .35);
+
+  box-shadow:
+      0 3px 12px
+      rgba(79, 70, 229, .07);
+}
+
+
+.option-icon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #5146e5;
+
+  color: white;
+
+  font-size: 23px;
+}
+
+
+.option-icon.join {
+  background: #697c70;
+}
+
+
+.option strong {
+  display: block;
+
+  font-size: 14px;
+
+  margin-bottom: 3px;
+}
+
+
+.option span {
+  display: block;
+
+  color: #777b77;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+ FORM
+========================================== */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+
+label {
+  display: block;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  margin-bottom: 9px;
+}
+
+
+input,
+textarea {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background:
+      rgba(255, 255, 255, .48);
+
+  border-radius: 11px;
+
+  padding: 14px;
+
+  color: #171717;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  box-shadow:
+      inset 0 0 0 1px
+      rgba(0, 0, 0, .025);
+
+  transition: .2s;
+}
+
+
+input {
+  height: 50px;
+}
+
+
+textarea {
+  height: 78px;
+
+  resize: none;
+}
+
+
+input:focus,
+textarea:focus {
+  background: rgba(255, 255, 255, .75);
+
+  box-shadow:
+      0 0 0 2px
+      rgba(79, 70, 229, .25);
+}
+
+
+input::placeholder,
+textarea::placeholder {
+  color: #777b77;
+}
+
+
+/* ==========================================
+ BOTÃO
+========================================== */
+
+.main-button {
+  width: 100%;
+
+  height: 50px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background:
+      linear-gradient(
+          135deg,
+          #5146e5,
+          #5549ec
+      );
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+      0 5px 12px
+      rgba(79, 70, 229, .18);
+
+  transition: .2s;
+}
+
+
+.main-button:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+      0 7px 16px
+      rgba(79, 70, 229, .25);
+}
+
+
+.main-button:active {
+  transform: translateY(0);
+}
+
+
+/* ==========================================
+ VOLTAR
+========================================== */
+
+.back {
+  display: block;
+
+  width: fit-content;
+
+  margin: 22px auto 0;
+
+  color: #555a55;
+
+  font-size: 13px;
+
+  text-decoration: none;
+}
+
+
+.back:hover {
+  color: #5146e5;
+}
+
+
+/* ==========================================
+ INGRESSAR
+========================================== */
+
+.join-content {
+  text-align: center;
+
+  margin-bottom: 24px;
+}
+
+
+.big-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin: 0 auto 13px;
+
+  border-radius: 15px;
+
+  background: #e7eee8;
+
+  color: #61776a;
+
+  font-size: 25px;
+}
+
+
+.join-content h2 {
+  font-size: 19px;
+
+  margin-bottom: 5px;
+}
+
+
+.join-content p {
+  color: #666b66;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+.code-input {
+  text-align: center;
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  text-transform: uppercase;
+}
+
+
+/* ==========================================
+ ESCONDER
+========================================== */
+
+.hidden {
+  display: none;
+}
+
+
+/* ==========================================
+ MODAL
+========================================== */
+
+.modal-background {
+  position: fixed;
+
+  inset: 0;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+      rgba(20, 24, 21, .45);
+
+  backdrop-filter: blur(5px);
+
+  z-index: 100;
+}
+
+
+.modal-background.show {
+  display: flex;
+}
+
+
+.modal {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 460px;
+
+  padding: 35px;
+
+  border-radius: 22px;
+
+  background:
+      rgba(250, 249, 243, .95);
+
+  box-shadow:
+      0 25px 60px
+      rgba(0, 0, 0, .2);
+
+  animation: modalIn .25s ease;
+}
+
+
+.close {
+  position: absolute;
+
+  top: 14px;
+
+  right: 17px;
+
+  width: 32px;
+
+  height: 32px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #666;
+
+  font-size: 25px;
+
+  cursor: pointer;
+}
+
+
+.success {
+  width: 50px;
+
+  height: 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dfece2;
+
+  color: #4c7258;
+
+  font-size: 23px;
+
+  margin-bottom: 15px;
+}
+
+
+.modal h2 {
+  font-size: 23px;
+
+  margin-bottom: 7px;
+}
+
+
+.modal > p {
+  color: #686d68;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  margin-bottom: 20px;
+}
+
+
+/* ==========================================
+ CÓDIGO GERADO
+========================================== */
+
+.generated-code {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 12px 13px;
+
+  margin-bottom: 17px;
+
+  border-radius: 11px;
+
+  background: #eeedff;
+
+  border: 1px solid #dad7ff;
+}
+
+
+.generated-code span {
+  color: #5146e5;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  letter-spacing: 3px;
+}
+
+
+.generated-code button {
+  padding: 8px 11px;
+
+  border: 1px solid #d4d1ef;
+
+  border-radius: 7px;
+
+  background: white;
+
+  color: #5146e5;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* ==========================================
+ E-MAIL
+========================================== */
+
+.email-box {
+  padding: 17px;
+
+  border: 1px solid #e1e1db;
+
+  border-radius: 11px;
+
+  background: rgba(255,255,255,.35);
+
+  margin-bottom: 20px;
+
+  color: #555a55;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+.email-title {
+  color: #222;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid #e3e3dd;
+
+  padding-bottom: 10px;
+
+  margin-bottom: 13px;
+}
+
+
+.email-box p {
+  margin-bottom: 9px;
+}
+
+
+.email-code {
+  width: fit-content;
+
+  margin: 13px auto;
+
+  padding: 9px 15px;
+
+  background: #eeedff;
+
+  color: #5146e5;
+
+  border-radius: 7px;
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+
+/* ==========================================
+ TOAST
+========================================== */
+
+.toast {
+  position: fixed;
+
+  bottom: 25px;
+
+  left: 50%;
+
+  transform:
+      translate(-50%, 20px);
+
+  padding: 11px 18px;
+
+  background: #222;
+
+  color: white;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+  opacity: 0;
+
+  transition: .25s;
+
+  pointer-events: none;
+}
+
+
+.toast.show {
+  opacity: 1;
+
+  transform:
+      translate(-50%, 0);
+}
+
+
+/* ==========================================
+ RESPONSIVO
+========================================== */
+
+@media (max-width: 600px) {
+
+  .container {
+      padding: 25px 15px;
+  }
+
+
+  .card {
+      padding: 32px 25px 25px;
+
+      border-radius: 20px;
+  }
+
+
+  h1 {
+      font-size: 32px;
+  }
+
+
+  .modal {
+      padding: 30px 23px;
+  }
+
+}
