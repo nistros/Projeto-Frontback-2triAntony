@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="stly.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <form class="formulario">
+        <h2>Cadastro</h2>
+
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="Digite seu e-mail">
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" placeholder="Digite sua senha">
+
+        <button type="submit">Entrar</button>
+
+        <p class="cadastro">
+            Já possuí uma conta?
+            <a href="../Página-de-login/login.html">Login</a>
+        </p>
+    </form>
+    <div id="g_id_onload"
+    data-client_id="1076356757210-52u4uog4lgihei6tnvltjdv52ca9i45q.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse">
+</div>
+
+<div class="g_id_signin"
+    data-type="standard"
+    data-theme="filled_blue"
+    data-size="large"
+    data-text="signin_with"
+    data-shape="pill">
+</div>
+<script>
+    function handleCredentialResponse(response){
+    
+        console.log(response);
+    
+        // Token JWT do Google
+        const token = response.credential;
+    
+        console.log(token);
+    
+    }
+    </script>
+</body>
+</html>
