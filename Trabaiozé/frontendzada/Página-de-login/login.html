@@ -1,60 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login</title>
 
     <link rel="stylesheet" href="style.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet"
+    >
 </head>
+
 <body>
 
-    <form class="formulario">
+    <form class="formulario" id="formLogin">
+
         <h2>Login</h2>
 
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
-
         <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="Digite seu e-mail">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+            required
+        >
 
         <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" placeholder="Digite sua senha">
 
-        <button type="submit">Entrar</button>
+        <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+            required
+        >
+
+        <button type="submit">
+            Entrar
+        </button>
+
+        <p id="mensagem"></p>
 
         <p class="cadastro">
             Não possui uma conta?
-            <a href="../cadastroz/cadastro.html">Cadastre-se</a>
+            <a href="../cadastroz/cadastro.html">
+                Cadastre-se
+            </a>
         </p>
-    </form>
-    <div id="g_id_onload"
-    data-client_id="1076356757210-52u4uog4lgihei6tnvltjdv52ca9i45q.apps.googleusercontent.com"
-    data-callback="handleCredentialResponse">
-</div>
 
-<div class="g_id_signin"
-    data-type="standard"
-    data-theme="filled_blue"
-    data-size="large"
-    data-text="signin_with"
-    data-shape="pill">
-</div>
-<script>
-    function handleCredentialResponse(response){
-    
-        console.log(response);
-    
-        // Token JWT do Google
-        const token = response.credential;
-    
-        console.log(token);
-    
-    }
+    </form>
+
+    <script>
+        const form = document.getElementById("formLogin");
+        const mensagem = document.getElementById("mensagem");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const senha = document.getElementById("senha").value;
+
+            mensagem.textContent = "Entrando...";
+            mensagem.style.color = "black";
+
+            try {
+                const resposta = await fetch("/login", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email,
+                        senha
+                    })
+                });
+
+                const dados = await resposta.json();
+
+                if (dados.sucesso) {
+
+                    mensagem.textContent = dados.mensagem;
+                    mensagem.style.color = "green";
+
+                    localStorage.setItem(
+                        "usuario",
+                        JSON.stringify(dados.usuario)
+                    );
+
+                    setTimeout(() => {
+                        window.location.href = "../home.html";
+                    }, 500);
+
+                } else {
+
+                    mensagem.textContent = dados.mensagem;
+                    mensagem.style.color = "red";
+                }
+
+            } catch (erro) {
+
+                console.error(erro);
+
+                mensagem.textContent =
+                    "Erro ao conectar com o servidor.";
+
+                mensagem.style.color = "red";
+            }
+        });
     </script>
+
 </body>
+
 </html>

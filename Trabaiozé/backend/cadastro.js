@@ -10,18 +10,16 @@ const arquivoUsuarios = path.join(__dirname, "usuarios.json");
 app.use(express.json());
 app.use(express.static("public"));
 
-// Lê os usuários
 function lerUsuarios() {
     if (!fs.existsSync(arquivoUsuarios)) {
         fs.writeFileSync(arquivoUsuarios, "[]");
     }
 
-    const dados = fs.readFileSync(arquivoUsuarios, "utf8");
-
-    return JSON.parse(dados);
+    return JSON.parse(
+        fs.readFileSync(arquivoUsuarios, "utf8")
+    );
 }
 
-// Salva os usuários
 function salvarUsuarios(usuarios) {
     fs.writeFileSync(
         arquivoUsuarios,
@@ -29,9 +27,7 @@ function salvarUsuarios(usuarios) {
     );
 }
 
-// CADASTRO
 app.post("/cadastro", (req, res) => {
-
     const { nome, email, senha } = req.body;
 
     if (!nome || !email || !senha) {
@@ -43,7 +39,6 @@ app.post("/cadastro", (req, res) => {
 
     const usuarios = lerUsuarios();
 
-    // Verifica se email já existe
     const existe = usuarios.find(
         usuario => usuario.email === email
     );
@@ -55,7 +50,6 @@ app.post("/cadastro", (req, res) => {
         });
     }
 
-    // Adiciona usuário
     usuarios.push({
         nome,
         email,
@@ -70,11 +64,15 @@ app.post("/cadastro", (req, res) => {
     });
 });
 
-
-// LOGIN
 app.post("/login", (req, res) => {
-
     const { email, senha } = req.body;
+
+    if (!email || !senha) {
+        return res.json({
+            sucesso: false,
+            mensagem: "Preencha email e senha."
+        });
+    }
 
     const usuarios = lerUsuarios();
 
@@ -100,7 +98,6 @@ app.post("/login", (req, res) => {
         }
     });
 });
-
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
