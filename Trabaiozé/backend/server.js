@@ -1,3 +1,4 @@
+
 const express = require("express");
 const fs = require("fs/promises");
 const path = require("path");
@@ -6,18 +7,26 @@ const crypto = require("crypto");
 const app = express();
 const PORT = 3000;
 
-// Caminhos absolutos baseados na localização deste server.js
+// ==========================================
+// CAMINHOS
+// ==========================================
+
 const pastaFrontend = path.resolve(
     __dirname,
-    "../frontendzada/mendingpage"
+    "../frontendzada/homepage"
 );
 
-const arquivoHTML = path.join(pastaFrontend, "mendingpage.html");
+const arquivoHTML = path.join(pastaFrontend, "home.html");
 const arquivoTurmas = path.join(__dirname, "turmas.json");
+const arquivoUsuarios = path.join(__dirname, "usuarios.json");
 
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
+app.use(express.static(pastaFrontend));
 
-// Página inicial: abre o HTML diretamente em /
+// ==========================================
+// PÁGINA INICIAL
+// ==========================================
+
 app.get("/", async (req, res) => {
     try {
         await fs.access(arquivoHTML);
@@ -29,49 +38,121 @@ app.get("/", async (req, res) => {
             <h1>Arquivo HTML não encontrado</h1>
             <p>O servidor procurou o arquivo em:</p>
             <code>${arquivoHTML}</code>
-            <p>Confira o nome do arquivo e as pastas do projeto.</p>
         `);
     }
 });
 
-// Disponibiliza CSS, JS e demais arquivos do front-end
-app.use(express.static(pastaFrontend));
-
-
 // ==========================================
-// LER E SALVAR JSON
+// LEITURA DOS ARQUIVOS JSON
 // ==========================================
 
-async function lerTurmas() {
+async function lerJson(arquivo, valorInicial = []) {
     try {
-        const dados = await fs.readFile(arquivoTurmas, "utf8");
+        const dados = await fs.readFile(arquivo, "utf8");
         return JSON.parse(dados);
     } catch (error) {
         if (error.code === "ENOENT") {
-            await fs.writeFile(arquivoTurmas, "[]", "utf8");
-            return [];
+            await fs.writeFile(
+                arquivo,
+                JSON.stringify(valorInicial, null, 2),
+                "utf8"
+            );
+
+            return valorInicial;
         }
 
         throw error;
     }
 }
 
-async function salvarTurmas(turmas) {
+async function salvarJson(arquivo, dados) {
     await fs.writeFile(
-        arquivoTurmas,
-        JSON.stringify(turmas, null, 2),
+        arquivo,
+        JSON.stringify(dados, null, 2),
         "utf8"
     );
 }
 
+async function lerTurmas() {
+    const dados = await lerJson(arquivoTurmas, []);
+
+    if (Array.isArray(dados)) return dados;
+    if (Array.isArray(dados.turmas)) return dados.turmas;
+
+    throw new Error("O arquivo turmas.json tem formato inválido.");
+}
+
+async function lerUsuarios() {
+    const dados = await lerJson(arquivoUsuarios, []);
+
+    if (Array.isArray(dados)) return dados;
+    if (Array.isArray(dados.usuarios)) return dados.usuarios;
+
+    throw new Error("O arquivo usuarios.json tem formato inválido.");
+}
 
 // ==========================================
-// GERAR CÓDIGO ÚNICO
+// NORMALIZAR USUÁRIOS
+// ==========================================
+
+function idUsuario(usuario, indice) {
+    return String(
+        usuario.id ??
+        usuario._id ??
+        usuario.email ??
+        usuario.e_mail ??
+        indice
+    );
+}
+
+function nomeUsuario(usuario) {
+    return String(
+        usuario.nome ??
+        usuario.name ??
+        usuario.nomeCompleto ??
+        ""
+    );
+}
+
+function emailUsuario(usuario) {
+    return String(
+        usuario.email ??
+        usuario.e_mail ??
+        ""
+    );
+}
+
+// ==========================================
+// LISTAR USUÁRIOS DISPONÍVEIS
+// ==========================================
+
+app.get("/api/usuarios", async (req, res) => {
+    try {
+        const usuarios = await lerUsuarios();
+
+        // Nunca enviar senhas ou hashes ao navegador.
+        const usuariosPublicos = usuarios.map((usuario, indice) => ({
+            id: idUsuario(usuario, indice),
+            nome: nomeUsuario(usuario),
+            email: emailUsuario(usuario)
+        }));
+
+        res.json(usuariosPublicos);
+    } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+
+        res.status(500).json({
+            erro: "Não foi possível carregar os usuários."
+        });
+    }
+});
+
+// ==========================================
+// GERAR CÓDIGO ÚNICO DA TURMA
 // ==========================================
 
 function gerarCodigo(turmas) {
     const caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
     let codigo;
 
     do {
@@ -84,11 +165,10 @@ function gerarCodigo(turmas) {
         }
 
         codigo = `TUR-${aleatorio}`;
-    } while (turmas.some(t => t.codigo === codigo));
+    } while (turmas.some(turma => turma.codigo === codigo));
 
     return codigo;
 }
-
 
 // ==========================================
 // CRIAR TURMA
@@ -101,7 +181,8 @@ app.post("/api/turmas", async (req, res) => {
             descricao = "",
             materia = "",
             professor = "",
-            ano_escolar = ""
+            ano_escolar = "",
+            pessoas = []
         } = req.body || {};
 
         if (typeof nome !== "string" || !nome.trim()) {
@@ -110,20 +191,69 @@ app.post("/api/turmas", async (req, res) => {
             });
         }
 
-        const campos = [
+        const camposTexto = [
             descricao,
             materia,
             professor,
             ano_escolar
         ];
 
-        if (campos.some(c => typeof c !== "string")) {
+        if (camposTexto.some(campo => typeof campo !== "string")) {
             return res.status(400).json({
                 erro: "Os campos devem ser textos."
             });
         }
 
-        const turmas = await lerTurmas();
+        if (!Array.isArray(pessoas) || pessoas.length === 0) {
+            return res.status(400).json({
+                erro: "Selecione pelo menos uma pessoa."
+            });
+        }
+
+        const [turmas, usuarios] = await Promise.all([
+            lerTurmas(),
+            lerUsuarios()
+        ]);
+
+        // Validar participantes com os cadastros existentes.
+        const participantes = [];
+        const idsAdicionados = new Set();
+
+        for (const pessoaRecebida of pessoas) {
+            const idRecebido =
+                pessoaRecebida && typeof pessoaRecebida === "object"
+                    ? pessoaRecebida.id
+                    : pessoaRecebida;
+
+            const indice = usuarios.findIndex((usuario, i) =>
+                idUsuario(usuario, i) === String(idRecebido)
+            );
+
+            if (indice === -1) {
+                return res.status(400).json({
+                    erro: "Um dos usuários selecionados não foi encontrado."
+                });
+            }
+
+            const usuario = usuarios[indice];
+            const id = idUsuario(usuario, indice);
+
+            // Não adicionar a mesma pessoa duas vezes.
+            if (idsAdicionados.has(id)) continue;
+            idsAdicionados.add(id);
+
+            participantes.push({
+                id,
+                nome: nomeUsuario(usuario),
+                email: emailUsuario(usuario)
+            });
+        }
+
+        if (participantes.length === 0) {
+            return res.status(400).json({
+                erro: "Selecione pelo menos uma pessoa válida."
+            });
+        }
 
         const turma = {
             id: crypto.randomUUID(),
@@ -132,13 +262,13 @@ app.post("/api/turmas", async (req, res) => {
             materia: materia.trim(),
             professor: professor.trim(),
             ano_escolar: ano_escolar.trim(),
+            pessoas: participantes,
             codigo: gerarCodigo(turmas),
             criadaEm: new Date().toISOString()
         };
 
         turmas.push(turma);
-
-        await salvarTurmas(turmas);
+        await salvarJson(arquivoTurmas, turmas);
 
         res.status(201).json(turma);
     } catch (error) {
@@ -150,7 +280,6 @@ app.post("/api/turmas", async (req, res) => {
     }
 });
 
-
 // ==========================================
 // LISTAR TURMAS
 // ==========================================
@@ -159,14 +288,13 @@ app.get("/api/turmas", async (req, res) => {
     try {
         res.json(await lerTurmas());
     } catch (error) {
-        console.error(error);
+        console.error("Erro ao listar turmas:", error);
 
         res.status(500).json({
             erro: "Erro ao carregar as turmas."
         });
     }
 });
-
 
 // ==========================================
 // BUSCAR UMA TURMA
@@ -177,7 +305,7 @@ app.get("/api/turmas/:id", async (req, res) => {
         const turmas = await lerTurmas();
 
         const turma = turmas.find(
-            t => t.id === req.params.id
+            item => item.id === req.params.id
         );
 
         if (!turma) {
@@ -195,7 +323,6 @@ app.get("/api/turmas/:id", async (req, res) => {
         });
     }
 });
-
 
 // ==========================================
 // EDITAR TURMA
@@ -217,14 +344,14 @@ app.put("/api/turmas/:id", async (req, res) => {
             });
         }
 
-        const campos = [
+        const camposTexto = [
             descricao,
             materia,
             professor,
             ano_escolar
         ];
 
-        if (campos.some(c => typeof c !== "string")) {
+        if (camposTexto.some(campo => typeof campo !== "string")) {
             return res.status(400).json({
                 erro: "Os campos devem ser textos."
             });
@@ -233,7 +360,7 @@ app.put("/api/turmas/:id", async (req, res) => {
         const turmas = await lerTurmas();
 
         const indice = turmas.findIndex(
-            t => t.id === req.params.id
+            turma => turma.id === req.params.id
         );
 
         if (indice === -1) {
@@ -251,7 +378,7 @@ app.put("/api/turmas/:id", async (req, res) => {
             ano_escolar: ano_escolar.trim()
         };
 
-        await salvarTurmas(turmas);
+        await salvarJson(arquivoTurmas, turmas);
 
         res.json(turmas[indice]);
     } catch (error) {
@@ -262,7 +389,6 @@ app.put("/api/turmas/:id", async (req, res) => {
         });
     }
 });
-
 
 // ==========================================
 // INGRESSAR PELO CÓDIGO
@@ -281,7 +407,7 @@ app.post("/api/turmas/entrar", async (req, res) => {
         const turmas = await lerTurmas();
 
         const turma = turmas.find(
-            t => t.codigo === codigo.trim().toUpperCase()
+            item => item.codigo === codigo.trim().toUpperCase()
         );
 
         if (!turma) {
@@ -302,8 +428,6 @@ app.post("/api/turmas/entrar", async (req, res) => {
         });
     }
 });
-
-
 // ==========================================
 // INICIAR SERVIDOR
 // ==========================================
@@ -311,4 +435,6 @@ app.post("/api/turmas/entrar", async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
     console.log(`HTML esperado em: ${arquivoHTML}`);
+    console.log(`Usuários em: ${arquivoUsuarios}`);
+    console.log(`Turmas em: ${arquivoTurmas}`);
 });
