@@ -2,11 +2,18 @@
   {
     "nome": "aaaaaaaata",
     "email": "ano@gmail.com",
-    "senha": "Gisele38@"
+    "senha": "$2b$12$ml7S/mO13Yxd/O.l54E01.27Ds3Ip19Q6BVNV2W1LjLqMhNz9gdZ2"
   },
   {
     "nome": "antonylindo",
     "email": "antonykloss7@gmail.com",
     "senha": "gisa1234"
+  },
+  {
+    "id": "a2241a77-2459-4dff-a4b1-f9fae9ab9c88",
+    "nome": "aa",
+    "email": "anoa@gmail.com",
+    "senha": "$2b$12$n9Z.QxZK7AjG7xZAHbZdw.AZufw38Z77lmwYXx301li8CLkn0ojha",
+    "criadoEm": "2026-10-21T11:30:36.073Z"
   }
 ]
