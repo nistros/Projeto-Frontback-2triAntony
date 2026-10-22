@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "4d0d6b87-64be-4a8f-91e0-1d4c7fb6edbd",
+    "nome": "aaaaaaa",
+    "descricao": "aaaaaaaaa",
+    "materia": "",
+    "professor": "aaaaaaa",
+    "ano_escolar": "",
+    "criadoPor": null,
+    "pessoas": [
+      {
+        "id": "ano@gmail.com",
+        "nome": "aaaaaaaata",
+        "email": "ano@gmail.com"
+      }
+    ],
+    "codigo": "TUR-RVD3",
+    "criadaEm": "2026-10-22T13:28:31.750Z"
+  },
+  {
+    "id": "ee38b776-df44-4b5c-924b-f5b1337947aa",
+    "nome": "aaaaa",
+    "descricao": "aaaaa",
+    "materia": "",
+    "professor": "aaaaaaaaaa",
+    "ano_escolar": "",
+    "criadoPor": null,
+    "pessoas": [
+      {
+        "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
+        "nome": "roberto",
+        "email": "robert21o@gmail.com"
+      }
+    ],
+    "codigo": "TUR-7M4E",
+    "criadaEm": "2026-10-22T13:57:05.446Z"
+  }
+]
