@@ -12,10 +12,36 @@
         "id": "ano@gmail.com",
         "nome": "aaaaaaaata",
         "email": "ano@gmail.com"
+      },
+      {
+        "id": "c21b9602-cd5a-4918-a95d-12712c30a38b",
+        "nome": "aaaaa",
+        "email": "aaataa@gmail.com"
       }
     ],
     "codigo": "TUR-RVD3",
-    "criadaEm": "2026-10-22T13:28:31.750Z"
+    "criadaEm": "2026-10-22T13:28:31.750Z",
+    "avisos": [
+      {
+        "id": "2a7b859e-a78e-46d4-aadc-c76905b64c9a",
+        "titulo": "esteguno cocus ta?",
+        "conteudo": "trolei rsrsrsrsrs",
+        "autor": {
+          "nome": "aaaaa",
+          "email": "aaataa@gmail.com"
+        },
+        "criadoEm": "2026-11-05T14:40:39.154Z",
+        "editadoEm": "2026-11-05T14:51:05.846Z",
+        "comentarios": [],
+        "visualizacoes": [
+          {
+            "email": "aaataa@gmail.com",
+            "nome": "aaaaa",
+            "vistoEm": "2026-11-05T14:40:42.401Z"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "ee38b776-df44-4b5c-924b-f5b1337947aa",
@@ -34,5 +60,37 @@
     ],
     "codigo": "TUR-7M4E",
     "criadaEm": "2026-10-22T13:57:05.446Z"
+  },
+  {
+    "id": "c4dd91b5-ac96-441c-910c-b721175e670d",
+    "nome": "aaaaaaa",
+    "descricao": "aaaa",
+    "professor": "aaaaa",
+    "materia": "",
+    "ano_escolar": "",
+    "criadoPor": {
+      "nome": "aaaaa",
+      "email": "aaataa@gmail.com"
+    },
+    "pessoas": [
+      {
+        "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
+        "nome": "roberto",
+        "email": "robert21o@gmail.com"
+      },
+      {
+        "id": "d23fb93d-5804-40ba-8c7d-36f13cb4c14c",
+        "nome": "aaaaa",
+        "email": "a@gmail.com"
+      },
+      {
+        "id": "e8f66647-416d-4f9b-bf8c-197b6ee58d6a",
+        "nome": "aaata@gmail.com",
+        "email": "aaata@gmail.com"
+      }
+    ],
+    "codigo": "TUR-AHYP",
+    "criadaEm": "2026-11-05T14:39:42.675Z",
+    "avisos": []
   }
 ]

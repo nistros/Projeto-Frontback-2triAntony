@@ -1,179 +1,628 @@
-const express = require('express');
-const fs = require('fs/promises');
-const path = require('path');
-const crypto = require('crypto');
+
+const express = require("express");
+const fs = require("fs/promises");
+const path = require("path");
+const crypto = require("crypto");
 
 const router = express.Router();
-const arquivoTurmas = path.join(__dirname, 'turmas.json');
-const arquivoUsuarios = path.join(__dirname, 'usuarios.json');
+
+const arquivoTurmas = path.join(__dirname, "turmas.json");
+const arquivoUsuarios = path.join(__dirname, "usuarios.json");
 
 async function lerLista(arquivo, nome) {
-  try {
-    const dados = JSON.parse(await fs.readFile(arquivo, 'utf8'));
-    if (!Array.isArray(dados)) throw new Error(`${nome} precisa conter uma lista.`);
-    return dados;
-  } catch (erro) {
-    if (erro.code === 'ENOENT') {
-      await fs.writeFile(arquivo, '[]', 'utf8');
-      return [];
+    try {
+        const dados = JSON.parse(await fs.readFile(arquivo, "utf8"));
+
+        if (!Array.isArray(dados)) {
+            throw new Error(`${nome} precisa conter uma lista.`);
+        }
+
+        return dados;
+    } catch (erro) {
+        if (erro.code === "ENOENT") {
+            await fs.writeFile(arquivo, "[]", "utf8");
+            return [];
+        }
+
+        throw erro;
     }
-    throw erro;
-  }
 }
 
 async function salvarTurmas(turmas) {
-  await fs.writeFile(arquivoTurmas, JSON.stringify(turmas, null, 2), 'utf8');
+    await fs.writeFile(
+        arquivoTurmas,
+        JSON.stringify(turmas, null, 2),
+        "utf8"
+    );
 }
 
-function idUsuario(usuario, indice) {
-  return String(usuario.id ?? usuario._id ?? usuario.email ?? usuario.e_mail ?? indice);
-}
-function nomeUsuario(usuario) {
-  return String(usuario.nome ?? usuario.name ?? usuario.nomeCompleto ?? '');
-}
-function emailUsuario(usuario) {
-  return String(usuario.email ?? usuario.e_mail ?? '').toLowerCase();
-}
-function gerarCodigo(turmas) {
-  const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let codigo;
-  do {
-    let sufixo = '';
-    for (let i = 0; i < 4; i++) sufixo += caracteres[crypto.randomInt(caracteres.length)];
-    codigo = `TUR-${sufixo}`;
-  } while (turmas.some(t => t.codigo === codigo));
-  return codigo;
+function emailDe(usuario) {
+    return String(usuario?.email ?? usuario?.e_mail ?? "")
+        .trim()
+        .toLowerCase();
 }
 
-// GET /api/turmas — lista as turmas.
-router.get('/api/turmas', async (_req, res) => {
-  try { res.json(await lerLista(arquivoTurmas, 'turmas.json')); }
-  catch (erro) {
-    console.error('Erro ao listar turmas:', erro);
-    res.status(500).json({ erro: 'Erro ao carregar as turmas.' });
-  }
-});
+function nomeDe(usuario) {
+    return String(
+        usuario?.nome ??
+        usuario?.name ??
+        usuario?.nomeCompleto ??
+        "Usuário"
+    );
+}
 
-// POST /api/turmas — cria uma turma e valida participantes existentes.
-router.post('/api/turmas', async (req, res) => {
-  try {
-    const body = req.body || {};
-    const nome = typeof body.nome === 'string' ? body.nome.trim() : '';
-    const descricao = typeof body.descricao === 'string' ? body.descricao.trim() : '';
-    const materia = typeof body.materia === 'string' ? body.materia.trim() : '';
-    const professor = typeof body.professor === 'string' ? body.professor.trim() : '';
-    const ano_escolar = typeof body.ano_escolar === 'string' ? body.ano_escolar.trim() : '';
-    const pessoasRecebidas = body.pessoas ?? [];
+function idDe(usuario, indice) {
+    return String(
+        usuario?.id ??
+        usuario?._id ??
+        emailDe(usuario) ??
+        indice
+    );
+}
 
-    if (!nome) return res.status(400).json({ erro: 'Digite o nome da turma.' });
-    if (!Array.isArray(pessoasRecebidas) || pessoasRecebidas.length === 0) {
-      return res.status(400).json({ erro: 'Selecione pelo menos uma pessoa.' });
+async function usuarioPorEmail(email) {
+    const usuarios = await lerLista(arquivoUsuarios, "usuarios.json");
+
+    return usuarios.find(
+        usuario => emailDe(usuario) === String(email || "").trim().toLowerCase()
+    ) || null;
+}
+
+function participa(turma, email) {
+    const alvo = String(email || "").trim().toLowerCase();
+
+    return Array.isArray(turma.pessoas) &&
+        turma.pessoas.some(pessoa => emailDe(pessoa) === alvo);
+}
+
+function codigoUnico(turmas) {
+    const caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let codigo;
+
+    do {
+        let sufixo = "";
+
+        for (let i = 0; i < 4; i++) {
+            sufixo += caracteres[crypto.randomInt(caracteres.length)];
+        }
+
+        codigo = `TUR-${sufixo}`;
+
+    } while (turmas.some(turma => turma.codigo === codigo));
+
+    return codigo;
+}
+
+function localizarTurma(turmas, id) {
+    return turmas.findIndex(
+        turma => String(turma.id) === String(id)
+    );
+}
+
+// ==========================================
+// LISTAR TURMAS
+// ==========================================
+
+router.get("/api/turmas", async (req, res) => {
+    try {
+        res.json(await lerLista(arquivoTurmas, "turmas.json"));
+    } catch (erro) {
+        console.error(erro);
+        res.status(500).json({ erro: "Erro ao carregar as turmas." });
     }
+});
 
-    const [turmas, usuarios] = await Promise.all([
-      lerLista(arquivoTurmas, 'turmas.json'),
-      lerLista(arquivoUsuarios, 'usuarios.json')
-    ]);
+// ==========================================
+// CRIAR TURMA
+// ==========================================
 
-    const participantes = [];
-    const idsAdicionados = new Set();
-    for (const pessoa of pessoasRecebidas) {
-      const idRecebido = pessoa && typeof pessoa === 'object' ? pessoa.id : pessoa;
-      const indice = usuarios.findIndex((u, i) => idUsuario(u, i) === String(idRecebido));
-      if (indice < 0) return res.status(400).json({ erro: 'Um dos usuários selecionados não foi encontrado.' });
-      const usuario = usuarios[indice];
-      const id = idUsuario(usuario, indice);
-      if (idsAdicionados.has(id)) continue;
-      idsAdicionados.add(id);
-      participantes.push({ id, nome: nomeUsuario(usuario), email: emailUsuario(usuario) });
+router.post("/api/turmas", async (req, res) => {
+    try {
+        const body = req.body || {};
+
+        const nome = String(body.nome || "").trim();
+        const descricao = String(body.descricao || "").trim();
+        const professor = String(body.professor || "").trim();
+
+        if (!nome || !descricao || !professor) {
+            return res.status(400).json({
+                erro: "Preencha nome, descrição e criador."
+            });
+        }
+
+        if (!Array.isArray(body.pessoas) || !body.pessoas.length) {
+            return res.status(400).json({
+                erro: "Selecione pelo menos uma pessoa."
+            });
+        }
+
+        const [turmas, usuarios] = await Promise.all([
+            lerLista(arquivoTurmas, "turmas.json"),
+            lerLista(arquivoUsuarios, "usuarios.json")
+        ]);
+
+        const pessoas = [];
+        const ids = new Set();
+
+        for (const recebida of body.pessoas) {
+            const idRecebido = String(
+                typeof recebida === "object" ? recebida.id : recebida
+            );
+
+            const indice = usuarios.findIndex(
+                (usuario, i) => idDe(usuario, i) === idRecebido
+            );
+
+            if (indice < 0) {
+                return res.status(400).json({
+                    erro: "Um dos usuários selecionados não foi encontrado."
+                });
+            }
+
+            const usuario = usuarios[indice];
+            const id = idDe(usuario, indice);
+
+            if (!ids.has(id)) {
+                ids.add(id);
+
+                pessoas.push({
+                    id,
+                    nome: nomeDe(usuario),
+                    email: emailDe(usuario)
+                });
+            }
+        }
+
+        const criadorEmail = String(body.criadorEmail || "")
+            .trim()
+            .toLowerCase();
+
+        const criador = usuarios.find(
+            usuario => emailDe(usuario) === criadorEmail
+        );
+
+        const turma = {
+            id: crypto.randomUUID(),
+            nome,
+            descricao,
+            professor,
+
+            materia: String(body.materia || ""),
+            ano_escolar: String(body.ano_escolar || ""),
+
+            criadoPor: criador ? {
+                nome: nomeDe(criador),
+                email: emailDe(criador)
+            } : null,
+
+            pessoas,
+            codigo: codigoUnico(turmas),
+            criadaEm: new Date().toISOString(),
+
+            avisos: []
+        };
+
+        turmas.push(turma);
+
+        await salvarTurmas(turmas);
+
+        res.status(201).json(turma);
+
+    } catch (erro) {
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Erro ao salvar a turma."
+        });
     }
-    if (!participantes.length) return res.status(400).json({ erro: 'Selecione pelo menos uma pessoa válida.' });
-
-    const criadorEmail = typeof body.criadorEmail === 'string' ? body.criadorEmail.trim().toLowerCase() : '';
-    const criador = usuarios.find(u => emailUsuario(u) === criadorEmail);
-    const turma = {
-      id: crypto.randomUUID(), nome, descricao, materia, professor, ano_escolar,
-      criadoPor: criador ? { nome: nomeUsuario(criador), email: emailUsuario(criador) } : null,
-      pessoas: participantes,
-      codigo: gerarCodigo(turmas), criadaEm: new Date().toISOString()
-    };
-    turmas.push(turma);
-    await salvarTurmas(turmas);
-    res.status(201).json(turma);
-  } catch (erro) {
-    console.error('Erro ao criar turma:', erro);
-    res.status(500).json({ erro: 'Erro ao salvar a turma.' });
-  }
 });
 
-// POST /api/turmas/entrar — adiciona o usuário à turma usando código e e-mail.
-router.post('/api/turmas/entrar', async (req, res) => {
-  try {
-    const codigo = typeof req.body?.codigo === 'string' ? req.body.codigo.trim().toUpperCase() : '';
-    const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
-    if (!codigo) return res.status(400).json({ erro: 'Digite o código da turma.' });
-    if (!email) return res.status(400).json({ erro: 'Não foi possível identificar seu e-mail. Entre novamente na conta.' });
+// ==========================================
+// ENTRAR EM TURMA
+// ==========================================
 
-    const [turmas, usuarios] = await Promise.all([
-      lerLista(arquivoTurmas, 'turmas.json'),
-      lerLista(arquivoUsuarios, 'usuarios.json')
-    ]);
-    const turma = turmas.find(t => String(t.codigo || '').toUpperCase() === codigo);
-    if (!turma) return res.status(404).json({ erro: 'Código de turma não encontrado.' });
-    const usuario = usuarios.find(u => emailUsuario(u) === email);
-    if (!usuario) return res.status(404).json({ erro: 'Usuário não encontrado. Faça login novamente.' });
+router.post("/api/turmas/entrar", async (req, res) => {
+    try {
+        const codigo = String(req.body?.codigo || "")
+            .trim()
+            .toUpperCase();
 
-    if (!Array.isArray(turma.pessoas)) turma.pessoas = [];
-    const id = String(usuario.id ?? usuario._id ?? usuario.email ?? usuario.e_mail);
-    const jaParticipa = turma.pessoas.some(p => String(p.id) === id || emailUsuario(p) === email);
-    if (jaParticipa) return res.json({ mensagem: 'Você já faz parte dessa turma.', turma });
+        const email = String(req.body?.email || "")
+            .trim()
+            .toLowerCase();
 
-    turma.pessoas.push({ id, nome: nomeUsuario(usuario), email });
-    await salvarTurmas(turmas);
-    res.json({ mensagem: 'Você entrou na turma!', turma });
-  } catch (erro) {
-    console.error('Erro ao entrar na turma:', erro);
-    res.status(500).json({ erro: 'Erro ao entrar na turma.' });
-  }
-});
+        if (!codigo || !email) {
+            return res.status(400).json({
+                erro: "Informe o código e entre na sua conta."
+            });
+        }
 
-// GET /api/turmas/:id — busca uma turma pelo ID.
-router.get('/api/turmas/:id', async (req, res) => {
-  try {
-    const turmas = await lerLista(arquivoTurmas, 'turmas.json');
-    const turma = turmas.find(t => t.id === req.params.id);
-    if (!turma) return res.status(404).json({ erro: 'Turma não encontrada.' });
-    res.json(turma);
-  } catch (erro) {
-    console.error('Erro ao buscar turma:', erro);
-    res.status(500).json({ erro: 'Erro ao buscar a turma.' });
-  }
-});
+        const [turmas, usuario, usuarios] = await Promise.all([
+            lerLista(arquivoTurmas, "turmas.json"),
+            usuarioPorEmail(email),
+            lerLista(arquivoUsuarios, "usuarios.json")
+        ]);
 
-// PUT /api/turmas/:id — edita os campos principais da turma.
-router.put('/api/turmas/:id', async (req, res) => {
-  try {
-    const body = req.body || {};
-    const nome = typeof body.nome === 'string' ? body.nome.trim() : '';
-    if (!nome) return res.status(400).json({ erro: 'O nome da turma é obrigatório.' });
-    const turmas = await lerLista(arquivoTurmas, 'turmas.json');
-    const indice = turmas.findIndex(t => t.id === req.params.id);
-    if (indice < 0) return res.status(404).json({ erro: 'Turma não encontrada.' });
+        const turma = turmas.find(
+            t => String(t.codigo || "").toUpperCase() === codigo
+        );
 
-    const campos = ['descricao', 'materia', 'professor', 'ano_escolar'];
-    turmas[indice].nome = nome;
-    for (const campo of campos) {
-      if (body[campo] !== undefined) {
-        if (typeof body[campo] !== 'string') return res.status(400).json({ erro: 'Os campos devem ser textos.' });
-        turmas[indice][campo] = body[campo].trim();
-      }
+        if (!turma) {
+            return res.status(404).json({
+                erro: "Código de turma não encontrado."
+            });
+        }
+
+        if (!usuario) {
+            return res.status(404).json({
+                erro: "Usuário não encontrado."
+            });
+        }
+
+        if (!Array.isArray(turma.pessoas)) {
+            turma.pessoas = [];
+        }
+
+        if (participa(turma, email)) {
+            return res.json({
+                mensagem: "Você já faz parte dessa turma.",
+                turma
+            });
+        }
+
+        const indice = usuarios.findIndex(
+            u => emailDe(u) === email
+        );
+
+        turma.pessoas.push({
+            id: idDe(usuario, indice),
+            nome: nomeDe(usuario),
+            email
+        });
+
+        await salvarTurmas(turmas);
+
+        res.json({
+            mensagem: "Você entrou na turma!",
+            turma
+        });
+
+    } catch (erro) {
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Erro ao entrar na turma."
+        });
     }
-    await salvarTurmas(turmas);
-    res.json(turmas[indice]);
-  } catch (erro) {
-    console.error('Erro ao editar turma:', erro);
-    res.status(500).json({ erro: 'Erro ao editar a turma.' });
-  }
 });
+
+// ==========================================
+// BUSCAR TURMA
+// ==========================================
+
+router.get("/api/turmas/:id", async (req, res) => {
+    try {
+        const turmas = await lerLista(arquivoTurmas, "turmas.json");
+
+        const turma = turmas.find(
+            t => String(t.id) === String(req.params.id)
+        );
+
+        if (!turma) {
+            return res.status(404).json({
+                erro: "Turma não encontrada."
+            });
+        }
+
+        if (!Array.isArray(turma.avisos)) {
+            turma.avisos = [];
+        }
+
+        res.json(turma);
+
+    } catch (erro) {
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Erro ao buscar a turma."
+        });
+    }
+});
+
+// ==========================================
+// CRIAR AVISO
+// ==========================================
+
+router.post("/api/turmas/:id/avisos", async (req, res) => {
+    try {
+        const { titulo, conteudo, autorEmail } = req.body || {};
+
+        if (!String(titulo || "").trim() ||
+            !String(conteudo || "").trim()) {
+
+            return res.status(400).json({
+                erro: "Preencha título e conteúdo."
+            });
+        }
+
+        const [turmas, usuario] = await Promise.all([
+            lerLista(arquivoTurmas, "turmas.json"),
+            usuarioPorEmail(autorEmail)
+        ]);
+
+        const indice = localizarTurma(turmas, req.params.id);
+
+        if (indice < 0) {
+            return res.status(404).json({
+                erro: "Turma não encontrada."
+            });
+        }
+
+        const turma = turmas[indice];
+
+        if (!usuario || !participa(turma, autorEmail)) {
+            return res.status(403).json({
+                erro: "Somente integrantes podem publicar avisos."
+            });
+        }
+
+        if (!Array.isArray(turma.avisos)) {
+            turma.avisos = [];
+        }
+
+        const aviso = {
+            id: crypto.randomUUID(),
+
+            titulo: String(titulo).trim().slice(0, 120),
+            conteudo: String(conteudo).trim().slice(0, 10000),
+
+            autor: {
+                nome: nomeDe(usuario),
+                email: emailDe(usuario)
+            },
+
+            criadoEm: new Date().toISOString(),
+            editadoEm: null,
+
+            comentarios: [],
+            visualizacoes: []
+        };
+
+        turma.avisos.unshift(aviso);
+
+        await salvarTurmas(turmas);
+
+        res.status(201).json(aviso);
+
+    } catch (erro) {
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Não foi possível publicar o aviso."
+        });
+    }
+});
+
+// ==========================================
+// EDITAR AVISO
+// ==========================================
+
+router.put("/api/turmas/:id/avisos/:avisoId", async (req, res) => {
+    try {
+        const { titulo, conteudo, autorEmail } = req.body || {};
+
+        const [turmas, usuario] = await Promise.all([
+            lerLista(arquivoTurmas, "turmas.json"),
+            usuarioPorEmail(autorEmail)
+        ]);
+
+        const indice = localizarTurma(turmas, req.params.id);
+
+        if (indice < 0) {
+            return res.status(404).json({
+                erro: "Turma não encontrada."
+            });
+        }
+
+        const turma = turmas[indice];
+
+        const aviso = (turma.avisos || []).find(
+            a => String(a.id) === String(req.params.avisoId)
+        );
+
+        if (!aviso) {
+            return res.status(404).json({
+                erro: "Aviso não encontrado."
+            });
+        }
+
+        if (!usuario ||
+            emailDe(aviso.autor) !== emailDe(usuario)) {
+
+            return res.status(403).json({
+                erro: "Somente quem criou o aviso pode editá-lo."
+            });
+        }
+
+        if (!String(titulo || "").trim() ||
+            !String(conteudo || "").trim()) {
+
+            return res.status(400).json({
+                erro: "Título e conteúdo são obrigatórios."
+            });
+        }
+
+        aviso.titulo = String(titulo).trim().slice(0, 120);
+        aviso.conteudo = String(conteudo).trim().slice(0, 10000);
+        aviso.editadoEm = new Date().toISOString();
+
+        await salvarTurmas(turmas);
+
+        res.json(aviso);
+
+    } catch (erro) {
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Não foi possível editar o aviso."
+        });
+    }
+});
+
+// ==========================================
+// COMENTAR AVISO
+// ==========================================
+
+router.post(
+    "/api/turmas/:id/avisos/:avisoId/comentarios",
+    async (req, res) => {
+        try {
+            const { texto, autorEmail } = req.body || {};
+
+            if (!String(texto || "").trim()) {
+                return res.status(400).json({
+                    erro: "Digite um comentário."
+                });
+            }
+
+            const [turmas, usuario] = await Promise.all([
+                lerLista(arquivoTurmas, "turmas.json"),
+                usuarioPorEmail(autorEmail)
+            ]);
+
+            const indice = localizarTurma(turmas, req.params.id);
+
+            if (indice < 0) {
+                return res.status(404).json({
+                    erro: "Turma não encontrada."
+                });
+            }
+
+            const turma = turmas[indice];
+
+            const aviso = (turma.avisos || []).find(
+                a => String(a.id) === String(req.params.avisoId)
+            );
+
+            if (!aviso) {
+                return res.status(404).json({
+                    erro: "Aviso não encontrado."
+                });
+            }
+
+            if (!usuario || !participa(turma, autorEmail)) {
+                return res.status(403).json({
+                    erro: "Somente integrantes podem comentar."
+                });
+            }
+
+            if (!Array.isArray(aviso.comentarios)) {
+                aviso.comentarios = [];
+            }
+
+            const comentario = {
+                id: crypto.randomUUID(),
+                texto: String(texto).trim().slice(0, 2000),
+
+                autor: {
+                    nome: nomeDe(usuario),
+                    email: emailDe(usuario)
+                },
+
+                criadoEm: new Date().toISOString()
+            };
+
+            aviso.comentarios.push(comentario);
+
+            await salvarTurmas(turmas);
+
+            res.status(201).json(comentario);
+
+        } catch (erro) {
+            console.error(erro);
+
+            res.status(500).json({
+                erro: "Não foi possível enviar o comentário."
+            });
+        }
+    }
+);
+
+// ==========================================
+// MARCAR AVISO COMO VISTO
+// ==========================================
+
+router.post(
+    "/api/turmas/:id/avisos/:avisoId/visto",
+    async (req, res) => {
+        try {
+            const email = String(req.body?.email || "")
+                .trim()
+                .toLowerCase();
+
+            const [turmas, usuario] = await Promise.all([
+                lerLista(arquivoTurmas, "turmas.json"),
+                usuarioPorEmail(email)
+            ]);
+
+            const indice = localizarTurma(turmas, req.params.id);
+
+            if (indice < 0) {
+                return res.status(404).json({
+                    erro: "Turma não encontrada."
+                });
+            }
+
+            const turma = turmas[indice];
+
+            const aviso = (turma.avisos || []).find(
+                a => String(a.id) === String(req.params.avisoId)
+            );
+
+            if (!aviso) {
+                return res.status(404).json({
+                    erro: "Aviso não encontrado."
+                });
+            }
+
+            if (!usuario || !participa(turma, email)) {
+                return res.status(403).json({
+                    erro: "Somente integrantes podem marcar como visto."
+                });
+            }
+
+            if (!Array.isArray(aviso.visualizacoes)) {
+                aviso.visualizacoes = [];
+            }
+
+            const jaViu = aviso.visualizacoes.some(
+                v => String(v.email).toLowerCase() === email
+            );
+
+            if (!jaViu) {
+                aviso.visualizacoes.push({
+                    email,
+                    nome: nomeDe(usuario),
+                    vistoEm: new Date().toISOString()
+                });
+            }
+
+            await salvarTurmas(turmas);
+
+            res.json({
+                sucesso: true,
+                visualizacoes: aviso.visualizacoes
+            });
+
+        } catch (erro) {
+            console.error(erro);
+
+            res.status(500).json({
+                erro: "Não foi possível marcar como visto."
+            });
+        }
+    }
+);
 
 module.exports = router;
