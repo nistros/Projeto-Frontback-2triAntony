@@ -26,5 +26,19 @@
     "email": "aaataa@gmail.com",
     "senha": "$2b$12$6U.U0b5Ow8E48/VPvH5ssO8UgGgRLRPsh8LLnMfl8bhk7ps0aLQkW",
     "criadoEm": "2026-11-05T14:39:25.167Z"
+  },
+  {
+    "id": "5442a4cf-0f33-43d7-b46a-74efe2b9d3e2",
+    "nome": "antony eduardo",
+    "email": "antonykloss7@gmail.com",
+    "senha": "$2b$12$Ca1WhI3FOsiWxUHoxr1FHOmw7bcFEfrn1pQXgWn6mfeQE/YKWAxWi",
+    "criadoEm": "2026-11-18T11:49:31.075Z"
+  },
+  {
+    "id": "27c8ecab-84b1-4829-ab3c-67309a82a804",
+    "nome": "estgs",
+    "email": "aa@gmail.com",
+    "senha": "$2b$12$yxYmZ.FDhL2woWhbA3dueOlpKJN0.Zom2bqK2veykTMvwaorI9Zuu",
+    "criadoEm": "2026-11-18T12:02:37.913Z"
   }
 ]

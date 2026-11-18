@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cadastro</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="./script.js" defer></script>
+</head>
+
+<body>
+    <form class="formulario" id="formCadastro">
+        <h2>Cadastro</h2>
+
+        <label for="nome">Nome</label>
+        <input
+            type="text"
+            id="nome"
+            placeholder="Digite seu nome"
+            required
+        >
+
+        <label for="email">E-mail</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+            required
+        >
+
+        <label for="senha">Senha</label>
+        <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+            minlength="8"
+            required
+        >
+
+        <button type="submit">Cadastrar</button>
+
+        <p id="mensagem" aria-live="polite"></p>
+
+        <p class="cadastro">
+            Já possui uma conta?
+            <a href="../Páginalogin/login.html">Login</a>
+        </p>
+    </form>
+</body>
+</html>

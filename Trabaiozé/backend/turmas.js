@@ -3,11 +3,20 @@ const express = require("express");
 const fs = require("fs/promises");
 const path = require("path");
 const crypto = require("crypto");
+const { Resend } = require("resend");
+
+require("dotenv").config({
+    path: path.join(__dirname, ".env")
+});
 
 const router = express.Router();
 
 const arquivoTurmas = path.join(__dirname, "turmas.json");
 const arquivoUsuarios = path.join(__dirname, "usuarios.json");
+
+// ==========================================
+// ARQUIVOS E USUÁRIOS
+// ==========================================
 
 async function lerLista(arquivo, nome) {
     try {
@@ -64,7 +73,8 @@ async function usuarioPorEmail(email) {
     const usuarios = await lerLista(arquivoUsuarios, "usuarios.json");
 
     return usuarios.find(
-        usuario => emailDe(usuario) === String(email || "").trim().toLowerCase()
+        usuario => emailDe(usuario) ===
+            String(email || "").trim().toLowerCase()
     ) || null;
 }
 
@@ -101,6 +111,86 @@ function localizarTurma(turmas, id) {
 }
 
 // ==========================================
+// ENVIAR E-MAIL DO AVISO
+// ==========================================
+
+async function enviarEmailAviso(turma, aviso, autorEmail) {
+    const apiKey = process.env.RESEND_API_KEY;
+    const remetente = process.env.EMAIL_FROM;
+
+    if (!apiKey || !remetente) {
+        throw new Error(
+            "O serviço de e-mail ainda não está configurado."
+        );
+    }
+
+    const destinatarios = [
+        ...new Set(
+            (turma.pessoas || [])
+                .map(emailDe)
+                .filter(email =>
+                    email &&
+                    email !== String(autorEmail).trim().toLowerCase()
+                )
+        )
+    ];
+
+    if (!destinatarios.length) {
+        return {
+            sucesso: true,
+            enviados: 0,
+            mensagem: "Não há outros participantes para notificar."
+        };
+    }
+
+    const resend = new Resend(apiKey);
+
+    let enviados = 0;
+    const falhas = [];
+
+    // Um envio individual por participante protege os endereços
+    // de e-mail dos demais integrantes da turma.
+    for (const destinatario of destinatarios) {
+        try {
+            const { error } = await resend.emails.send({
+                from: remetente,
+                to: destinatario,
+                subject: `Novo aviso na turma ${turma.nome}: ${aviso.titulo}`,
+                text:
+                    `Olá!\n\n` +
+                    `Um novo aviso foi publicado na turma ${turma.nome}.\n\n` +
+                    `Título: ${aviso.titulo}\n\n` +
+                    `${aviso.conteudo}\n\n` +
+                    `Publicado por: ${aviso.autor.nome}\n\n` +
+                    `Acesse o Tchurmas para participar da conversa.`
+            });
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            enviados++;
+
+        } catch (erro) {
+            console.error(
+                `Erro ao enviar e-mail para ${destinatario}:`,
+                erro
+            );
+
+            falhas.push(destinatario);
+        }
+    }
+
+    return {
+        sucesso: falhas.length === 0,
+        enviados,
+        mensagem: falhas.length
+            ? `${falhas.length} envio(s) falharam.`
+            : "Todos os e-mails foram enviados."
+    };
+}
+
+// ==========================================
 // LISTAR TURMAS
 // ==========================================
 
@@ -109,7 +199,9 @@ router.get("/api/turmas", async (req, res) => {
         res.json(await lerLista(arquivoTurmas, "turmas.json"));
     } catch (erro) {
         console.error(erro);
-        res.status(500).json({ erro: "Erro ao carregar as turmas." });
+        res.status(500).json({
+            erro: "Erro ao carregar as turmas."
+        });
     }
 });
 
@@ -147,7 +239,9 @@ router.post("/api/turmas", async (req, res) => {
 
         for (const recebida of body.pessoas) {
             const idRecebido = String(
-                typeof recebida === "object" ? recebida.id : recebida
+                typeof recebida === "object"
+                    ? recebida.id
+                    : recebida
             );
 
             const indice = usuarios.findIndex(
@@ -336,11 +430,15 @@ router.get("/api/turmas/:id", async (req, res) => {
 
 router.post("/api/turmas/:id/avisos", async (req, res) => {
     try {
-        const { titulo, conteudo, autorEmail } = req.body || {};
+        const {
+            titulo,
+            conteudo,
+            autorEmail,
+            enviarEmail: solicitarEmail
+        } = req.body || {};
 
         if (!String(titulo || "").trim() ||
             !String(conteudo || "").trim()) {
-
             return res.status(400).json({
                 erro: "Preencha título e conteúdo."
             });
@@ -389,11 +487,36 @@ router.post("/api/turmas/:id/avisos", async (req, res) => {
             visualizacoes: []
         };
 
+        // Salva o aviso primeiro. Mesmo que o serviço de e-mail
+        // falhe, o aviso continua publicado na turma.
         turma.avisos.unshift(aviso);
 
         await salvarTurmas(turmas);
 
-        res.status(201).json(aviso);
+        let emailEnvio = null;
+
+        if (solicitarEmail === true) {
+            try {
+                emailEnvio = await enviarEmailAviso(
+                    turma,
+                    aviso,
+                    emailDe(usuario)
+                );
+            } catch (erroEmail) {
+                console.error("Erro ao enviar e-mails:", erroEmail);
+
+                emailEnvio = {
+                    sucesso: false,
+                    enviados: 0,
+                    mensagem: erroEmail.message
+                };
+            }
+        }
+
+        res.status(201).json({
+            ...aviso,
+            emailEnvio
+        });
 
     } catch (erro) {
         console.error(erro);
@@ -439,7 +562,6 @@ router.put("/api/turmas/:id/avisos/:avisoId", async (req, res) => {
 
         if (!usuario ||
             emailDe(aviso.autor) !== emailDe(usuario)) {
-
             return res.status(403).json({
                 erro: "Somente quem criou o aviso pode editá-lo."
             });
@@ -447,7 +569,6 @@ router.put("/api/turmas/:id/avisos/:avisoId", async (req, res) => {
 
         if (!String(titulo || "").trim() ||
             !String(conteudo || "").trim()) {
-
             return res.status(400).json({
                 erro: "Título e conteúdo são obrigatórios."
             });

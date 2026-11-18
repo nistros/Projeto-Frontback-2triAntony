@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>Tchurmas</title>
+
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- CABEÇALHO -->
+    <header class="topbar">
+        <button id="toggle-sidebar" class="icon-button menu-button"
+            type="button" aria-label="Abrir menu">☰</button>
+
+        <a class="brand" href="#inicio" id="brand-link">
+            <span class="brand-mark">T</span>
+            <span>Tchurmas</span>
+        </a>
+
+        <div class="topbar-spacer"></div>
+
+        <button id="abrir-criacao-topo"
+            class="button button-primary" type="button">
+            ＋ Criar turma
+        </button>
+
+        <button id="perfil" class="avatar"
+            type="button" aria-label="Perfil">U</button>
+    </header>
+
+    <!-- MENU LATERAL -->
+    <aside id="sidebar" class="sidebar">
+        <button id="nav-inicio" class="nav-item active" type="button">
+            <span class="nav-icon">⌂</span> Início
+        </button>
+
+        <div class="sidebar-heading-row">
+            <span class="sidebar-heading">Suas turmas</span>
+            <button id="abrir-criacao-lateral"
+                class="icon-button small" type="button">＋</button>
+        </div>
+
+        <div id="sidebar-turmas" class="sidebar-classes"></div>
+        <div id="sidebar-vazio" class="sidebar-empty">
+            Suas turmas aparecerão aqui.
+        </div>
+
+        <div class="sidebar-bottom">
+            <span class="sidebar-dot"></span>
+            Aprender junto fica melhor.
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main id="main-content" class="main-content" tabindex="-1">
+
+        <!-- INÍCIO -->
+        <section id="pagina-inicio" class="page-section">
+
+            <div class="welcome-row">
+                <div>
+                    <p class="eyebrow">SEU ESPAÇO DE APRENDIZADO</p>
+                    <h1>Suas turmas</h1>
+                    <p class="page-subtitle">
+                        Organize suas aulas e aprenda em conjunto.
+                    </p>
+                </div>
+
+                <button id="abrir-criacao"
+                    class="button button-primary desktop-create"
+                    type="button">＋ Criar turma</button>
+            </div>
+
+            <div id="estado-vazio" class="empty-state" hidden>
+                <div class="empty-illustration">✦ ▱ ✎</div>
+                <h2>Seu aprendizado começa aqui</h2>
+                <p>
+                    Crie uma turma para reunir pessoas,
+                    compartilhar objetivos e organizar seus estudos.
+                </p>
+
+                <button id="abrir-criacao-vazio"
+                    class="button button-primary" type="button">
+                    Criar primeira turma
+                </button>
+            </div>
+
+            <!-- ENTRAR EM TURMA -->
+            <section class="ingressar-section">
+                <div>
+                    <p class="eyebrow">APRENDAM JUNTOS</p>
+                    <h2>Entrar em uma turma</h2>
+                    <p class="page-subtitle">
+                        Já tem um código? Digite abaixo para participar.
+                    </p>
+                </div>
+
+                <form id="form-ingressar-turma" class="ingressar-form">
+                    <label for="codigo-turma">Código da turma</label>
+
+                    <div class="ingressar-controls">
+                        <input
+                            type="text"
+                            id="codigo-turma"
+                            name="codigo"
+                            placeholder="Ex.: TUR-A7K2"
+                            maxlength="8"
+                            required
+                            autocomplete="off"
+                        >
+
+                        <button type="submit" class="button button-primary">
+                            Ingressar
+                        </button>
+                    </div>
+
+                    <p id="mensagem-ingresso" aria-live="polite"></p>
+                </form>
+            </section>
+
+            <div id="lista-turmas" class="class-grid"
+                aria-live="polite"></div>
+        </section>
+
+        <!-- PÁGINA DA TURMA -->
+        <section id="pagina-turma" class="page-section class-page" hidden>
+
+            <button id="voltar-inicio" class="back-link" type="button">
+                ← Todas as turmas
+            </button>
+
+            <!-- BANNER -->
+            <div class="class-banner">
+                <div class="banner-pattern"></div>
+
+                <div class="banner-content">
+                    <p class="eyebrow banner-eyebrow">SUA SALA DE AULA</p>
+                    <h1 id="detalhe-nome">Nome da turma</h1>
+                    <p id="detalhe-descricao">Descrição da turma</p>
+                </div>
+
+                <div class="banner-badge" id="detalhe-iniciais">T</div>
+            </div>
+
+            <!-- NAVEGAÇÃO DA TURMA -->
+            <div class="class-tabs">
+                <button
+                    id="aba-avisos"
+                    class="class-tab active"
+                    type="button"
+                    data-aba="avisos">
+                    📢 Avisos
+                </button>
+
+                <button
+                    id="aba-informacoes"
+                    class="class-tab"
+                    type="button"
+                    data-aba="informacoes">
+                    ℹ Informações
+                </button>
+            </div>
+
+            <!-- ABA AVISOS -->
+            <section id="conteudo-avisos" class="tab-content">
+
+                <div class="section-title-row">
+                    <div>
+                        <h2>Avisos da turma</h2>
+                        <p class="page-subtitle">
+                            Comunicados, novidades e conversas da turma.
+                        </p>
+                    </div>
+
+                    <button
+                        id="abrir-criar-aviso"
+                        class="button button-primary"
+                        type="button">
+                        ＋ Criar aviso
+                    </button>
+                </div>
+
+                <!-- FORMULÁRIO DE NOVO AVISO -->
+                <form id="form-aviso" class="notice-form" hidden>
+                    <h3 id="titulo-form-aviso">Novo aviso</h3>
+
+                    <label for="titulo-aviso">Título</label>
+                    <input
+                        id="titulo-aviso"
+                        name="titulo"
+                        maxlength="120"
+                        placeholder="Ex.: Atividade para sexta-feira"
+                        required
+                    >
+
+                    <label for="conteudo-aviso">Mensagem</label>
+                    <textarea
+                        id="conteudo-aviso"
+                        name="conteudo"
+                        rows="5"
+                        maxlength="10000"
+                        placeholder="Escreva seu aviso..."
+                        required
+                    ></textarea>
+
+                    <div id="opcao-email-aviso" class="field-help">
+                        <label>
+                            <input
+                                type="checkbox"
+                                id="enviar-email-aviso"
+                            >
+                            Enviar este aviso também por e-mail aos participantes
+                        </label>
+                    </div>
+                    
+                    <p id="erro-aviso" class="form-error"></p>
+
+                    <div class="modal-actions">
+                        <button
+                            id="cancelar-aviso"
+                            class="button button-quiet"
+                            type="button">
+                            Cancelar
+                        </button>
+
+                        <button
+                            id="salvar-aviso"
+                            class="button button-primary"
+                            type="submit">
+                            Publicar aviso
+                        </button>
+                    </div>
+                </form>
+
+                <!-- LISTA DE AVISOS -->
+                <div id="lista-avisos" class="notices-list">
+                    <div class="empty-state">
+                        <h3>Nenhum aviso por enquanto</h3>
+                        <p>
+                            Quando alguém publicar um aviso,
+                            ele aparecerá aqui.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ABA INFORMAÇÕES -->
+            <section id="conteudo-informacoes"
+                class="tab-content" hidden>
+
+                <div class="section-title-row">
+                    <div>
+                        <h2>Informações da turma</h2>
+                        <p class="page-subtitle">
+                            Consulte os detalhes deste espaço.
+                        </p>
+                    </div>
+
+                    <button
+                        id="editar-informacoes-turma"
+                        class="button button-quiet"
+                        type="button">
+                        ✎ Editar informações
+                    </button>
+                </div>
+
+                <!-- DADOS PRINCIPAIS -->
+                <div class="class-meta-grid">
+
+                    <article class="info-panel">
+                        <span class="panel-icon">♙</span>
+                        <div>
+                            <p class="panel-label">Criada por</p>
+                            <strong id="detalhe-criador">Não informado</strong>
+                        </div>
+                    </article>
+
+                    <article class="info-panel">
+                        <span class="panel-icon">♧</span>
+                        <div>
+                            <p class="panel-label">Participantes</p>
+                            <strong id="detalhe-quantidade">0 pessoas</strong>
+                        </div>
+                    </article>
+
+                    <article class="info-panel">
+                        <span class="panel-icon">⌁</span>
+                        <div>
+                            <p class="panel-label">Código da turma</p>
+                            <strong id="detalhe-codigo">—</strong>
+                            <button id="copiar-codigo"
+                                class="text-button" type="button">
+                                Copiar código
+                            </button>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- OUTROS DADOS -->
+                <div class="class-details-grid">
+                    <article class="info-panel">
+                        <div>
+                            <p class="panel-label">Matéria</p>
+                            <strong id="detalhe-materia">Não informada</strong>
+                        </div>
+                    </article>
+
+                    <article class="info-panel">
+                        <div>
+                            <p class="panel-label">Ano escolar</p>
+                            <strong id="detalhe-ano">Não informado</strong>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- EDIÇÃO DOS DADOS -->
+                <form id="form-editar-turma" class="notice-form" hidden>
+                    <h3>Editar informações</h3>
+
+                    <label for="editar-nome-turma">Nome</label>
+                    <input id="editar-nome-turma" maxlength="80" required>
+
+                    <label for="editar-descricao-turma">Descrição</label>
+                    <textarea id="editar-descricao-turma"
+                        rows="3" maxlength="500" required></textarea>
+
+                    <label for="editar-materia-turma">Matéria</label>
+                    <input id="editar-materia-turma" maxlength="100">
+
+                    <label for="editar-ano-turma">Ano escolar</label>
+                    <input id="editar-ano-turma" maxlength="50">
+
+                    <p id="erro-editar-turma" class="form-error"></p>
+
+                    <div class="modal-actions">
+                        <button id="cancelar-edicao-turma"
+                            class="button button-quiet" type="button">
+                            Cancelar
+                        </button>
+
+                        <button class="button button-primary" type="submit">
+                            Salvar alterações
+                        </button>
+                    </div>
+                </form>
+
+                <!-- PARTICIPANTES -->
+                <section class="people-section">
+                    <div class="section-title-row">
+                        <div>
+                            <h2>Pessoas da turma</h2>
+                            <p class="page-subtitle">
+                                Quem faz parte deste espaço de aprendizado.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="detalhe-pessoas" class="people-grid"></div>
+                </section>
+
+            </section>
+
+        </section>
+
+        <div id="toast" class="toast"
+            role="status" aria-live="polite" hidden></div>
+
+    </main>
+</div>
+
+<!-- MODAL DE CRIAÇÃO DE TURMA -->
+<div id="modal-turma" class="modal" hidden>
+    <div class="modal-backdrop" data-close-modal="true"></div>
+
+    <section class="modal-card" role="dialog"
+        aria-modal="true" aria-labelledby="titulo-modal">
+
+        <div class="modal-header">
+            <div>
+                <p class="eyebrow">VAMOS COMEÇAR</p>
+                <h2 id="titulo-modal">Criar turma</h2>
+                <p class="modal-subtitle">
+                    Preencha os detalhes e convide pessoas.
+                </p>
+            </div>
+
+            <button id="fechar-modal"
+                class="icon-button close-button"
+                type="button">×</button>
+        </div>
+
+        <form id="form-turma">
+
+            <label for="nome-turma">
+                Nome da turma <span class="required">*</span>
+            </label>
+
+            <input id="nome-turma" name="nome"
+                maxlength="80" required
+                placeholder="Ex.: Desenvolvimento Web">
+
+            <label for="descricao-turma">
+                Descrição <span class="required">*</span>
+            </label>
+
+            <textarea id="descricao-turma" name="descricao"
+                maxlength="500" required rows="3"
+                placeholder="Qual é o objetivo desta turma?"></textarea>
+
+            <label for="criador-turma">
+                Nome de quem criou <span class="required">*</span>
+            </label>
+
+            <input id="criador-turma" name="professor"
+                maxlength="100" required
+                placeholder="Ex.: Ana Silva">
+
+            <label for="busca-pessoas">
+                Adicionar pessoas <span class="required">*</span>
+            </label>
+
+            <input id="busca-pessoas" type="search"
+                placeholder="Buscar por nome ou e-mail"
+                autocomplete="off">
+
+            <p class="field-help">
+                Selecione pelo menos uma pessoa para participar.
+            </p>
+
+            <div id="lista-usuarios" class="user-list"></div>
+
+            <p id="mensagem-erro" class="form-error" role="alert"></p>
+
+            <div class="modal-actions">
+                <button id="cancelar-modal"
+                    class="button button-quiet" type="button">
+                    Cancelar
+                </button>
+
+                <button id="salvar-turma"
+                    class="button button-primary" type="submit">
+                    Criar turma
+                </button>
+            </div>
+        </form>
+    </section>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Tchurmas</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <form class="formulario" id="formLogin">
+        <h2>Login</h2>
+
+        <label for="email">E-mail</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+            required
+        >
+
+        <label for="senha">Senha</label>
+        <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+            required
+        >
+
+        <button type="submit">Entrar</button>
+
+        <p id="mensagem" aria-live="polite"></p>
+
+        <p class="cadastro">
+            Não possui uma conta?
+            <a href="../Páginacadastro/cadastro.html">Cadastre-se</a>
+        </p>
+    </form>
+</body>
+</html>
