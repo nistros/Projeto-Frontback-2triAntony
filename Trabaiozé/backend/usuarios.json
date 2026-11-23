@@ -1,44 +1,23 @@
 [
   {
-    "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
-    "nome": "roberto",
-    "email": "robert21o@gmail.com",
-    "senha": "$2b$12$axUaKeZrc2aKOLUkWzXN6O/asj2ho/N2tzDfMZaHf7NqOs4kNbd3W",
-    "criadoEm": "2026-10-22T13:34:05.389Z"
+    "id": "0b459907-d456-41d2-b65a-73f8acd99e8f",
+    "nome": "antony1(voumandarmsg)",
+    "email": "antony1@gmail.com",
+    "senha": "$2b$12$hw3rO2Ecz5.O8uKnqfbAJ.GrbZhW/4YYtcxxavV/qM69aWCtDivtu",
+    "criadoEm": "2026-11-23T14:08:19.787Z"
   },
   {
-    "id": "d23fb93d-5804-40ba-8c7d-36f13cb4c14c",
-    "nome": "aaaaa",
-    "email": "a@gmail.com",
-    "senha": "$2b$12$2WocDHHlo/EeLttRQtxnhuEAborcIttWB3w9VhZ2N2hrFJSES8Dbe",
-    "criadoEm": "2026-10-22T13:44:34.900Z"
+    "id": "57e19663-2208-4e70-8d91-3c255aa49f96",
+    "nome": "antony2(vourecebermsg)",
+    "email": "onboarding@resend.dev",
+    "senha": "$2b$12$N26WFoHJzpIrH/mRhmUpMumqq9LiqiszS3Z5DmsWm25J6UU6fXBD6",
+    "criadoEm": "2026-11-23T14:11:53.470Z"
   },
   {
-    "id": "e8f66647-416d-4f9b-bf8c-197b6ee58d6a",
-    "nome": "aaata@gmail.com",
-    "email": "aaata@gmail.com",
-    "senha": "$2b$12$VraXwAS63rLSNhV9XcotYu4ZVFvro/57WGPzNAkIiYUyQBSLiYp7q",
-    "criadoEm": "2026-11-05T13:40:50.299Z"
-  },
-  {
-    "id": "c21b9602-cd5a-4918-a95d-12712c30a38b",
-    "nome": "aaaaa",
-    "email": "aaataa@gmail.com",
-    "senha": "$2b$12$6U.U0b5Ow8E48/VPvH5ssO8UgGgRLRPsh8LLnMfl8bhk7ps0aLQkW",
-    "criadoEm": "2026-11-05T14:39:25.167Z"
-  },
-  {
-    "id": "5442a4cf-0f33-43d7-b46a-74efe2b9d3e2",
-    "nome": "antony eduardo",
+    "id": "f3176629-1891-443c-a76e-c90ecf334617",
+    "nome": "ata",
     "email": "antonykloss7@gmail.com",
-    "senha": "$2b$12$Ca1WhI3FOsiWxUHoxr1FHOmw7bcFEfrn1pQXgWn6mfeQE/YKWAxWi",
-    "criadoEm": "2026-11-18T11:49:31.075Z"
-  },
-  {
-    "id": "27c8ecab-84b1-4829-ab3c-67309a82a804",
-    "nome": "estgs",
-    "email": "aa@gmail.com",
-    "senha": "$2b$12$yxYmZ.FDhL2woWhbA3dueOlpKJN0.Zom2bqK2veykTMvwaorI9Zuu",
-    "criadoEm": "2026-11-18T12:02:37.913Z"
+    "senha": "$2b$12$B8T9Ur3A1HcxcF8salVUsus1mF3ilSkzrPMvVkpl/vDutW609QII.",
+    "criadoEm": "2026-11-23T14:14:25.087Z"
   }
 ]

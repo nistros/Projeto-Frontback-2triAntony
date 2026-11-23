@@ -26,6 +26,8 @@ let turmaAtual = null;
 let avisoEditando = null;
 let toastTimer = null;
 
+const pessoasSelecionadas = new Set();
+
 const modal = $("modal-turma");
 const formulario = $("form-turma");
 const listaUsuarios = $("lista-usuarios");
@@ -220,6 +222,7 @@ async function carregarDados() {
 
 function abrirModal() {
     mensagemErro.textContent = "";
+    pessoasSelecionadas.clear();
     modal.hidden = false;
 
     renderizarUsuarios();
@@ -232,60 +235,64 @@ function fecharModal() {
     mensagemErro.textContent = "";
 }
 
-function renderizarUsuarios() {
-    const termo = buscaPessoas.value.trim().toLowerCase();
 
-    const selecionados = new Set(
-        [...formulario.querySelectorAll(
-            'input[name="pessoas"]:checked'
-        )].map(input => input.value)
-    );
-
-    listaUsuarios.replaceChildren();
-
-    const filtrados = usuarios.filter(usuario =>
-        String(usuario.nome).toLowerCase().includes(termo) ||
-        String(usuario.email).toLowerCase().includes(termo)
-    );
-
-    if (!filtrados.length) {
-        const aviso = document.createElement("p");
-        aviso.className = "field-help";
-        aviso.textContent = "Nenhuma pessoa encontrada.";
-        listaUsuarios.append(aviso);
-        return;
+ function renderizarUsuarios() {
+        const termo = buscaPessoas.value.trim().toLowerCase();
+    
+        listaUsuarios.replaceChildren();
+    
+        const filtrados = usuarios.filter(usuario =>
+            String(usuario.nome).toLowerCase().includes(termo) ||
+            String(usuario.email).toLowerCase().includes(termo)
+        );
+    
+        if (!filtrados.length) {
+            const aviso = document.createElement("p");
+            aviso.className = "field-help";
+            aviso.textContent = "Nenhuma pessoa encontrada.";
+            listaUsuarios.append(aviso);
+            return;
+        }
+    
+        filtrados.forEach(usuario => {
+            const id = String(usuario.id);
+    
+            const label = document.createElement("label");
+            label.className = "user-option";
+    
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = "pessoas";
+            checkbox.value = id;
+            checkbox.checked = pessoasSelecionadas.has(id);
+    
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    pessoasSelecionadas.add(id);
+                } else {
+                    pessoasSelecionadas.delete(id);
+                }
+            });
+    
+            const avatar = document.createElement("span");
+            avatar.className = "person-avatar small-avatar";
+            avatar.textContent = iniciais(usuario.nome);
+    
+            const info = document.createElement("span");
+            info.className = "user-option-info";
+    
+            const nome = document.createElement("strong");
+            nome.textContent = usuario.nome || "Usuário";
+    
+            const email = document.createElement("small");
+            email.textContent = usuario.email || "";
+    
+            info.append(nome, email);
+            label.append(checkbox, avatar, info);
+    
+            listaUsuarios.append(label);
+        });
     }
-
-    filtrados.forEach(usuario => {
-        const label = document.createElement("label");
-        label.className = "user-option";
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = "pessoas";
-        checkbox.value = String(usuario.id);
-        checkbox.checked = selecionados.has(String(usuario.id));
-
-        const avatar = document.createElement("span");
-        avatar.className = "person-avatar small-avatar";
-        avatar.textContent = iniciais(usuario.nome);
-
-        const info = document.createElement("span");
-        info.className = "user-option-info";
-
-        const nome = document.createElement("strong");
-        nome.textContent = usuario.nome || "Usuário";
-
-        const email = document.createElement("small");
-        email.textContent = usuario.email || "";
-
-        info.append(nome, email);
-        label.append(checkbox, avatar, info);
-
-        listaUsuarios.append(label);
-    });
-}
-
 formulario.addEventListener("submit", async event => {
     event.preventDefault();
 
@@ -294,10 +301,8 @@ formulario.addEventListener("submit", async event => {
     const nome = $("nome-turma").value.trim();
     const descricao = $("descricao-turma").value.trim();
     const professor = $("criador-turma").value.trim();
-
-    const ids = [
-        ...formulario.querySelectorAll('input[name="pessoas"]:checked')
-    ].map(input => input.value);
+    
+    const ids = [...pessoasSelecionadas];
 
     const pessoas = usuarios.filter(
         usuario => ids.includes(String(usuario.id))
@@ -333,6 +338,7 @@ formulario.addEventListener("submit", async event => {
         turmas.unshift(novaTurma);
 
         formulario.reset();
+        pessoasSelecionadas.clear();
         buscaPessoas.value = "";
 
         fecharModal();

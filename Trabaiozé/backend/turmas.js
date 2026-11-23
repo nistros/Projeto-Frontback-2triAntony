@@ -209,6 +209,10 @@ router.get("/api/turmas", async (req, res) => {
 // CRIAR TURMA
 // ==========================================
 
+// ==========================================
+// CRIAR TURMA
+// ==========================================
+
 router.post("/api/turmas", async (req, res) => {
     try {
         const body = req.body || {};
@@ -223,21 +227,37 @@ router.post("/api/turmas", async (req, res) => {
             });
         }
 
-        if (!Array.isArray(body.pessoas) || !body.pessoas.length) {
-            return res.status(400).json({
-                erro: "Selecione pelo menos uma pessoa."
-            });
-        }
-
         const [turmas, usuarios] = await Promise.all([
             lerLista(arquivoTurmas, "turmas.json"),
             lerLista(arquivoUsuarios, "usuarios.json")
         ]);
 
+        // Identifica o criador pelo e-mail da sessão.
+        const criadorEmail = String(body.criadorEmail || "")
+            .trim()
+            .toLowerCase();
+
+        const indiceCriador = usuarios.findIndex(
+            usuario => emailDe(usuario) === criadorEmail
+        );
+
+        if (indiceCriador < 0) {
+            return res.status(400).json({
+                erro: "Não foi possível identificar o criador da turma."
+            });
+        }
+
+        const criador = usuarios[indiceCriador];
+
+        // Monta a lista de integrantes selecionados.
         const pessoas = [];
         const ids = new Set();
 
-        for (const recebida of body.pessoas) {
+        const selecionados = Array.isArray(body.pessoas)
+            ? body.pessoas
+            : [];
+
+        for (const recebida of selecionados) {
             const idRecebido = String(
                 typeof recebida === "object"
                     ? recebida.id
@@ -268,13 +288,18 @@ router.post("/api/turmas", async (req, res) => {
             }
         }
 
-        const criadorEmail = String(body.criadorEmail || "")
-            .trim()
-            .toLowerCase();
+        // Adiciona automaticamente o criador como integrante.
+        const idCriador = idDe(criador, indiceCriador);
 
-        const criador = usuarios.find(
-            usuario => emailDe(usuario) === criadorEmail
-        );
+        if (!ids.has(idCriador)) {
+            pessoas.push({
+                id: idCriador,
+                nome: nomeDe(criador),
+                email: emailDe(criador)
+            });
+
+            ids.add(idCriador);
+        }
 
         const turma = {
             id: crypto.randomUUID(),
@@ -285,10 +310,10 @@ router.post("/api/turmas", async (req, res) => {
             materia: String(body.materia || ""),
             ano_escolar: String(body.ano_escolar || ""),
 
-            criadoPor: criador ? {
+            criadoPor: {
                 nome: nomeDe(criador),
                 email: emailDe(criador)
-            } : null,
+            },
 
             pessoas,
             codigo: codigoUnico(turmas),
@@ -304,7 +329,7 @@ router.post("/api/turmas", async (req, res) => {
         res.status(201).json(turma);
 
     } catch (erro) {
-        console.error(erro);
+        console.error("Erro ao criar turma:", erro);
 
         res.status(500).json({
             erro: "Erro ao salvar a turma."

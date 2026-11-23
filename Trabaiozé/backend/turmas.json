@@ -1,207 +1,39 @@
 [
   {
-    "id": "4d0d6b87-64be-4a8f-91e0-1d4c7fb6edbd",
-    "nome": "aaaaaaa",
-    "descricao": "aaaaaaaaa",
-    "materia": "",
-    "professor": "aaaaaaa",
-    "ano_escolar": "",
-    "criadoPor": null,
-    "pessoas": [
-      {
-        "id": "ano@gmail.com",
-        "nome": "aaaaaaaata",
-        "email": "ano@gmail.com"
-      },
-      {
-        "id": "c21b9602-cd5a-4918-a95d-12712c30a38b",
-        "nome": "aaaaa",
-        "email": "aaataa@gmail.com"
-      },
-      {
-        "id": "e8f66647-416d-4f9b-bf8c-197b6ee58d6a",
-        "nome": "aaata@gmail.com",
-        "email": "aaata@gmail.com"
-      }
-    ],
-    "codigo": "TUR-RVD3",
-    "criadaEm": "2026-10-22T13:28:31.750Z",
-    "avisos": [
-      {
-        "id": "2a7b859e-a78e-46d4-aadc-c76905b64c9a",
-        "titulo": "esteguno cocus ta?",
-        "conteudo": "trolei rsrsrsrsrs",
-        "autor": {
-          "nome": "aaaaa",
-          "email": "aaataa@gmail.com"
-        },
-        "criadoEm": "2026-11-05T14:40:39.154Z",
-        "editadoEm": "2026-11-05T14:51:05.846Z",
-        "comentarios": [
-          {
-            "id": "7823186b-51ce-4e90-a25b-d2af2d9cf6ab",
-            "texto": "eta",
-            "autor": {
-              "nome": "aaata@gmail.com",
-              "email": "aaata@gmail.com"
-            },
-            "criadoEm": "2026-11-05T15:16:08.363Z"
-          }
-        ],
-        "visualizacoes": [
-          {
-            "email": "aaataa@gmail.com",
-            "nome": "aaaaa",
-            "vistoEm": "2026-11-05T14:40:42.401Z"
-          },
-          {
-            "email": "aaata@gmail.com",
-            "nome": "aaata@gmail.com",
-            "vistoEm": "2026-11-05T15:14:45.537Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "ee38b776-df44-4b5c-924b-f5b1337947aa",
-    "nome": "aaaaa",
-    "descricao": "aaaaa",
-    "materia": "",
-    "professor": "aaaaaaaaaa",
-    "ano_escolar": "",
-    "criadoPor": null,
-    "pessoas": [
-      {
-        "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
-        "nome": "roberto",
-        "email": "robert21o@gmail.com"
-      }
-    ],
-    "codigo": "TUR-7M4E",
-    "criadaEm": "2026-10-22T13:57:05.446Z"
-  },
-  {
-    "id": "c4dd91b5-ac96-441c-910c-b721175e670d",
-    "nome": "aaaaaaa",
-    "descricao": "aaaa",
-    "professor": "aaaaa",
+    "id": "25314204-e4a1-48b6-bc78-8c56579382f3",
+    "nome": "est",
+    "descricao": "guno",
+    "professor": "cocus",
     "materia": "",
     "ano_escolar": "",
     "criadoPor": {
-      "nome": "aaaaa",
-      "email": "aaataa@gmail.com"
+      "nome": "antony1(voumandarmsg)",
+      "email": "antony1@gmail.com"
     },
     "pessoas": [
       {
-        "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
-        "nome": "roberto",
-        "email": "robert21o@gmail.com"
+        "id": "0b459907-d456-41d2-b65a-73f8acd99e8f",
+        "nome": "antony1(voumandarmsg)",
+        "email": "antony1@gmail.com"
       },
       {
-        "id": "d23fb93d-5804-40ba-8c7d-36f13cb4c14c",
-        "nome": "aaaaa",
-        "email": "a@gmail.com"
-      },
-      {
-        "id": "e8f66647-416d-4f9b-bf8c-197b6ee58d6a",
-        "nome": "aaata@gmail.com",
-        "email": "aaata@gmail.com"
+        "id": "57e19663-2208-4e70-8d91-3c255aa49f96",
+        "nome": "antony2(vourecebermsg)",
+        "email": "onboarding@resend.dev"
       }
     ],
-    "codigo": "TUR-AHYP",
-    "criadaEm": "2026-11-05T14:39:42.675Z",
-    "avisos": []
-  },
-  {
-    "id": "70206253-e264-4b63-a929-0f94802a9da4",
-    "nome": "estgs",
-    "descricao": "aaaaaaaaa",
-    "professor": "antony",
-    "materia": "",
-    "ano_escolar": "",
-    "criadoPor": {
-      "nome": "antony eduardo",
-      "email": "antonykloss7@gmail.com"
-    },
-    "pessoas": [
-      {
-        "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
-        "nome": "roberto",
-        "email": "robert21o@gmail.com"
-      },
-      {
-        "id": "d23fb93d-5804-40ba-8c7d-36f13cb4c14c",
-        "nome": "aaaaa",
-        "email": "a@gmail.com"
-      },
-      {
-        "id": "e8f66647-416d-4f9b-bf8c-197b6ee58d6a",
-        "nome": "aaata@gmail.com",
-        "email": "aaata@gmail.com"
-      },
-      {
-        "id": "c21b9602-cd5a-4918-a95d-12712c30a38b",
-        "nome": "aaaaa",
-        "email": "aaataa@gmail.com"
-      },
-      {
-        "id": "5442a4cf-0f33-43d7-b46a-74efe2b9d3e2",
-        "nome": "antony eduardo",
-        "email": "antonykloss7@gmail.com"
-      }
-    ],
-    "codigo": "TUR-MMUW",
-    "criadaEm": "2026-11-18T11:49:56.306Z",
+    "codigo": "TUR-XZGS",
+    "criadaEm": "2026-11-23T14:13:41.144Z",
     "avisos": [
       {
-        "id": "e12ada59-a988-47f1-966a-a9e65b8de50d",
-        "titulo": "aaaaaaaaaaaa",
-        "conteudo": "atatatat",
-        "autor": {
-          "nome": "antony eduardo",
-          "email": "antonykloss7@gmail.com"
-        },
-        "criadoEm": "2026-11-18T12:00:46.217Z",
-        "editadoEm": "2026-11-18T12:00:51.084Z",
-        "comentarios": [],
-        "visualizacoes": []
-      },
-      {
-        "id": "c40503b5-b236-4376-9eb6-6a0c15715711",
-        "titulo": "aaaaaaaaaaaa",
-        "conteudo": "atata",
-        "autor": {
-          "nome": "antony eduardo",
-          "email": "antonykloss7@gmail.com"
-        },
-        "criadoEm": "2026-11-18T11:56:45.945Z",
-        "editadoEm": null,
-        "comentarios": [],
-        "visualizacoes": []
-      },
-      {
-        "id": "38055d8f-bf38-4814-a9ca-c0ba804eb337",
+        "id": "81d4e9ae-5fc1-40d0-8956-c5e1c01fcbd6",
         "titulo": "ata",
-        "conteudo": "aaaaaaaa",
+        "conteudo": "tata",
         "autor": {
-          "nome": "antony eduardo",
-          "email": "antonykloss7@gmail.com"
+          "nome": "antony1(voumandarmsg)",
+          "email": "antony1@gmail.com"
         },
-        "criadoEm": "2026-11-18T11:56:29.872Z",
-        "editadoEm": null,
-        "comentarios": [],
-        "visualizacoes": []
-      },
-      {
-        "id": "bcb13582-fff3-4190-b870-52de4687a19e",
-        "titulo": "ata",
-        "conteudo": "tab",
-        "autor": {
-          "nome": "antony eduardo",
-          "email": "antonykloss7@gmail.com"
-        },
-        "criadoEm": "2026-11-18T11:50:04.686Z",
+        "criadoEm": "2026-11-23T14:13:47.157Z",
         "editadoEm": null,
         "comentarios": [],
         "visualizacoes": []
@@ -209,92 +41,58 @@
     ]
   },
   {
-    "id": "e6964060-c588-44af-bfb8-00e9e11bd4e0",
-    "nome": "aaaaaa",
-    "descricao": "aa",
-    "professor": "aa",
-    "materia": "",
-    "ano_escolar": "",
-    "criadoPor": {
-      "nome": "estgs",
-      "email": "aa@gmail.com"
-    },
-    "pessoas": [
-      {
-        "id": "1ca4d86d-e205-40b3-a0b3-99dbbc99c5d7",
-        "nome": "roberto",
-        "email": "robert21o@gmail.com"
-      },
-      {
-        "id": "d23fb93d-5804-40ba-8c7d-36f13cb4c14c",
-        "nome": "aaaaa",
-        "email": "a@gmail.com"
-      },
-      {
-        "id": "e8f66647-416d-4f9b-bf8c-197b6ee58d6a",
-        "nome": "aaata@gmail.com",
-        "email": "aaata@gmail.com"
-      },
-      {
-        "id": "c21b9602-cd5a-4918-a95d-12712c30a38b",
-        "nome": "aaaaa",
-        "email": "aaataa@gmail.com"
-      },
-      {
-        "id": "5442a4cf-0f33-43d7-b46a-74efe2b9d3e2",
-        "nome": "antony eduardo",
-        "email": "antonykloss7@gmail.com"
-      },
-      {
-        "id": "27c8ecab-84b1-4829-ab3c-67309a82a804",
-        "nome": "estgs",
-        "email": "aa@gmail.com"
-      }
-    ],
-    "codigo": "TUR-RPLJ",
-    "criadaEm": "2026-11-18T12:02:59.167Z",
-    "avisos": []
-  },
-  {
-    "id": "f714c802-c9b0-4ea7-9c6f-4fcf7fa808e7",
-    "nome": "bbbb",
+    "id": "7bd28758-3341-4e07-ada8-e1f54b722585",
+    "nome": "fechu",
     "descricao": "ata",
-    "professor": "ata",
+    "professor": "anaptny",
     "materia": "",
     "ano_escolar": "",
     "criadoPor": {
-      "nome": "estgs",
-      "email": "aa@gmail.com"
+      "nome": "antony1(voumandarmsg)",
+      "email": "antony1@gmail.com"
     },
     "pessoas": [
       {
-        "id": "c21b9602-cd5a-4918-a95d-12712c30a38b",
-        "nome": "aaaaa",
-        "email": "aaataa@gmail.com"
+        "id": "0b459907-d456-41d2-b65a-73f8acd99e8f",
+        "nome": "antony1(voumandarmsg)",
+        "email": "antony1@gmail.com"
       },
       {
-        "id": "5442a4cf-0f33-43d7-b46a-74efe2b9d3e2",
-        "nome": "antony eduardo",
+        "id": "57e19663-2208-4e70-8d91-3c255aa49f96",
+        "nome": "antony2(vourecebermsg)",
+        "email": "onboarding@resend.dev"
+      },
+      {
+        "id": "f3176629-1891-443c-a76e-c90ecf334617",
+        "nome": "ata",
         "email": "antonykloss7@gmail.com"
-      },
-      {
-        "id": "27c8ecab-84b1-4829-ab3c-67309a82a804",
-        "nome": "estgs",
-        "email": "aa@gmail.com"
       }
     ],
-    "codigo": "TUR-2PZW",
-    "criadaEm": "2026-11-18T12:03:33.760Z",
+    "codigo": "TUR-2MM3",
+    "criadaEm": "2026-11-23T14:14:56.337Z",
     "avisos": [
       {
-        "id": "2e428fa1-2586-4d9f-a861-29e463846bdd",
-        "titulo": "vamo ver",
-        "conteudo": "Ata@123123",
+        "id": "909a4bb4-a41d-4c54-921f-a3744a345139",
+        "titulo": "aaata",
+        "conteudo": "aaaaa",
         "autor": {
-          "nome": "estgs",
-          "email": "aa@gmail.com"
+          "nome": "antony1(voumandarmsg)",
+          "email": "antony1@gmail.com"
         },
-        "criadoEm": "2026-11-18T12:03:46.752Z",
+        "criadoEm": "2026-11-23T14:26:33.812Z",
+        "editadoEm": null,
+        "comentarios": [],
+        "visualizacoes": []
+      },
+      {
+        "id": "e73f9f50-2955-4de6-904f-2b5622f471c2",
+        "titulo": "ta",
+        "conteudo": "aaaaaaaaaaaaaaaaaaaaaaa",
+        "autor": {
+          "nome": "antony1(voumandarmsg)",
+          "email": "antony1@gmail.com"
+        },
+        "criadoEm": "2026-11-23T14:15:07.311Z",
         "editadoEm": null,
         "comentarios": [],
         "visualizacoes": []
